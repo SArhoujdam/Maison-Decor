@@ -1,0 +1,344 @@
+{% load static %}
+
+{% include 'accueil.html' %}
+  
+
+    <style>
+     
+        h1 {
+            text-align: center;
+        }
+        .search-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 0 5px #ccc;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        img {
+            width: 80px;
+            height: auto;
+            border-radius: 4px;
+        }
+        button {
+            padding: 6px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+        .btn-home {
+            background-color: #28a745;
+        }
+        .btn-remove {
+            background-color: red;
+        }
+        .btn-edit {
+            background-color: #ffc107;
+            color: black;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+        }
+        
+    </style>
+   <style>
+    .popup {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .popup-content {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 400px;
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        position: relative;
+        animation: popupFadeIn 0.3s ease-out;
+    }
+
+    @keyframes popupFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .popup-content label {
+        font-weight: bold;
+    }
+
+    .popup-content input,
+    .popup-content textarea,
+    .popup-content select {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    .close-popup {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 20px;
+        cursor: pointer;
+        color: #333;
+    }
+
+    .popup-content button {
+        align-self: center;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    .popup-content button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+        
+        
+    
+        <div class="center-button-container">
+            <button onclick="openPopup('add-popup')">Ajouter un produit</button>
+        </div>
+<div id="add-popup" class="popup">
+    <div class="popup-content">
+        <span class="close-popup" onclick="closePopup('add-popup')">&times;</span>
+        <h2>Ajouter un produit</h2>
+        <form action="{% url 'ajouter_produit' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="nom">Nom</label>
+            <input type="text" name="nom" id="nom" required><br><br>
+
+            <label for="categorie_id">Catégorie</label>
+            <select name="categorie_id" id="categorie_id" required>
+                {% for categorie in categories %}
+                <option value="{{ categorie.id }}" {% if categorie.id == produit.categorie.id %}selected{% endif %}>
+                    {{ categorie.nom }}
+                </option>
+                {% endfor %}
+            </select><br><br>
+
+            <label for="prix">Prix</label>
+            <input type="number" name="prix" id="prix" required><br><br>
+
+            <label for="description">Description</label>
+            <textarea name="description" id="description"></textarea><br><br>
+
+            <label for="quantite">Quantité</label>
+            <input type="number" name="quantite" id="quantite" required><br><br>
+
+            <label for="photo">Photo</label>
+            <input type="file" name="photo" id="photo" required><br><br>
+
+            <button type="submit">Ajouter</button>
+        </form>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Nom</th>
+            <th>Catégorie</th>
+            <th>Prix</th>
+            <th>Description</th>
+            <th>Quantité</th>
+            <th>Actions</th>
+            <th>Home</th>
+            <th>Promo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for produit in produits %}
+        <tr>
+            <td><img src="{{ produit.photo.url }}" alt="{{ produit.nom }}" style="width: 80px; height: auto;"></td>
+            <td>{{ produit.nom }}</td>
+            <td>{{ produit.categorie.nom }}</td>
+            <td>{{ produit.prix }} DH</td>
+            <td>{{ produit.description|slice:":60" }}...</td>
+            <td>{{ produit.quantite }}</td>
+            <td>
+                <button class="btn-edit" onclick="openPopup('edit-popup-{{ produit.id }}')">Modifier</button>
+                <button class="btn-delete" onclick="openPopup('delete-popup-{{ produit.id }}')">Supprimer</button>
+            </td>
+
+            <!-- Colonne Home -->
+            <td>
+                {% if produit in home_products %}
+                    <button class="btn-remove" onclick="toggleProduitHome({{ produit.id }}, 'supprimer')">Retirer de Home</button>
+                    <span style="color: green;">✔</span>
+                {% else %}
+                    <button class="btn-home" onclick="toggleProduitHome({{ produit.id }}, 'ajouter')">Ajouter à Home</button>
+                    <span style="color: red;">❌</span>
+                {% endif %}
+            </td>
+
+            <!-- Colonne Promo -->
+            <td>
+                {% if produit in promo_products %}
+                    <button class="btn-remove" onclick="toggleProduitPromo({{ produit.id }}, 'supprimer')">Retirer de Promo</button>
+                    <span style="color: green;">✔</span>
+                {% else %}
+                    <button class="btn-home" onclick="toggleProduitPromo({{ produit.id }}, 'ajouter')">Ajouter à Promo</button>
+                    <span style="color: red;">❌</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9">Aucun produit disponible.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- POPUPS -->
+{% for produit in produits %}
+<!-- Modifier -->
+<div id="edit-popup-{{ produit.id }}" class="popup">
+    <div class="popup-content">
+        <span class="close-popup" onclick="closePopup('edit-popup-{{ produit.id }}')">&times;</span>
+        <h2>Modifier le produit</h2>
+        <form method="POST" action="{% url 'edit_product' produit.id %}" enctype="multipart/form-data">
+
+            {% csrf_token %}
+            <input type="text" name="nom" value="{{ produit.nom }}" required><br><br>
+            <select name="categorie">
+                {% for categorie in categories %}
+                    <option value="{{ categorie.id }}" {% if categorie.id == produit.categorie.id %}selected{% endif %}>{{ categorie.nom }}</option>
+                {% endfor %}
+            </select><br><br>
+            <input type="text" name="prix" value="{{ produit.prix }}" required><br><br>
+            <textarea name="description">{{ produit.description }}</textarea><br><br>
+            <input type="number" name="quantite" value="{{ produit.quantite }}" required><br><br>
+            <input type="file" name="photo"><br><br>
+            <button type="submit">Enregistrer</button>
+        </form>
+    </div>
+</div>
+
+<!-- Supprimer -->
+<div id="delete-popup-{{ produit.id }}" class="popup">
+    <div class="popup-content">
+        <span class="close-popup" onclick="closePopup('delete-popup-{{ produit.id }}')">&times;</span>
+        <h3>Confirmer la suppression de <strong>{{ produit.nom }}</strong> ?</h3>
+        <form action="{% url 'delete_product' produit.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete">Supprimer</button>
+            <button type="button" onclick="closePopup('delete-popup-{{ produit.id }}')">Annuler</button>
+        </form>
+    </div>
+</div>
+{% endfor %}
+
+<!-- CSRF Hidden Form -->
+<form id="csrf-token-form" style="display:none;">{% csrf_token %}</form>
+
+<script>
+    function openPopup(id) {
+        document.getElementById(id).style.display = 'flex';
+    }
+
+    function closePopup(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    function toggleProduitHome(produitId, action) {
+        fetch('{% url "ajouter_produit_home" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `produit_id=${produitId}&methode=${action}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message || data.error);
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+        });
+    }
+
+    function toggleProduitPromo(produitId, action) {
+        fetch('{% url "ajouter_produit_promo" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `produit_id=${produitId}&methode=${action}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message || data.error);
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+        });
+    }
+    function applyColors() {
+
+const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+const textColor = localStorage.getItem('textColor') || '#000000';
+const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+
+
+document.body.style.backgroundColor = backgroundColor;
+document.body.style.color = textColor;
+document.body.style.fontFamily = fontFamily;
+
+// const links = document.querySelectorAll('a');
+// links.forEach(link => {
+//     link.style.color = textColor;
+// });
+}
+
+
+document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+
+</body>
+</html>
+
+

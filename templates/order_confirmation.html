@@ -1,0 +1,20 @@
+{% include 'header.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h2>   votre commande est confirmé</h2>
+            <p>   Merci pour votre commande!</p>
+            <p>   Nous avons bien reçu votre commande et elle est en cours de traitement.</p>
+            votre  commande en attendue de liserve</p>
+            <p>   Nous vous enverrons un e-mail de confirmation une fois que votre commande aura été expédiée.</p>
+            <p>   Votre commande a été traitée avec succès.</p>
+            <p>   Détails de la commande:</p>
+            <a href="{{ download_pdf_url }}">Télécharger votre billet d'achat (PDF)</a>
+            <a href="{% url 'home' %}" class="btn btn-primary"> Retour à la page d'accueil</a>
+           
+        </div>
+    </div>
+</div>
+{% endblock %}

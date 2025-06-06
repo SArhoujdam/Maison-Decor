@@ -1,0 +1,97 @@
+{% load static %}
+
+
+{% include 'header.html' %}
+    <br>
+    <div class="notification-container">
+        {% if user.is_authenticated %}
+            
+        {% else %}
+    
+        {% endif %}
+        
+        <!-- Affichage des messages -->
+        <div class="notification">
+          {% if user.is_authenticated %}
+            
+          {% else %}
+              <p>Veuillez vous connecter.</p>
+          {% endif %}
+            {% for message in messages %}
+                <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+            {% endfor %}
+            <img id="cross" src="{% static 'images/close.png' %}" width="15px" height="15px" alt="Fermer">
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('cross').addEventListener('click', function() {
+            document.getElementsByClassName('notification-container')[0].style.display = 'none';
+        });
+    </script>
+
+    <main class="main-container">
+        
+        <form class="container" action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="profile-photo-container profile-photo-form-container">
+                <p class="profile-page-heading">Edit your profile</p>
+                <img src="{{ profile.profile_photo.url }}" alt="user-image">  <!-- Afficher l'image actuelle -->
+                <input type="file" name="profile_image" accept="image/*">
+            </div>
+        
+            <div class="user-content-container user-profile-form-container">
+                <ul>
+                    <li class="name">
+                        <label for="user-name">Your Name</label>
+                        <input type="text" name="username" id="user-name" value="{{ request.user.username }}">
+                    </li>
+                    <li class="title">
+                        <label for="user-email">Your Email</label>
+                        <input type="email" name="email" id="user-email" value="{{ request.user.email }}">
+                    </li>
+                    <li class="desc">
+                        <label for="password1">New Password</label>
+                        <input type="password" name="password1" id="password1">
+                    </li>
+                    <li class="desc">
+                        <label for="password2">Confirm Password</label>
+                        <input type="password" name="password2" id="password2">
+                    </li>
+                </ul>
+                <button class="profile-save-button" type="submit">Save</button>
+            </div>
+        </form>
+        
+        
+    </main>
+
+    <script>
+      document.getElementById('user-name').placeholder = 'Your Name';
+      document.getElementById('user-email').placeholder = 'Your Email';
+      
+    </script>
+<script>
+    function applyColors() {
+
+    const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+    const textColor = localStorage.getItem('textColor') || '#000000';
+    const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+
+  
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+
+    // const links = document.querySelectorAll('a');
+    // links.forEach(link => {
+    //     link.style.color = textColor;
+    // });
+}
+
+
+document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+  </body>
+</html>

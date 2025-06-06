@@ -1,0 +1,423 @@
+
+
+<title>Tableau de bord</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'CSS/style.css' %}" />
+  <link rel="stylesheet" href="{% static 'CSS/footer.css' %}" />
+  
+    
+    <link rel="stylesheet" href="{% static 'css1/login.css' %}">
+
+  <link rel="stylesheet" href="{% static 'CSS/styl.css' %}" />
+  <link rel="stylesheet" href="{% static 'CSS/detaille.produit.css' %}" />
+  <link rel="stylesheet" href="{% static 'CSS/respansif.css' %}" />
+  <link rel="icon" href="{% static 'images/iPhone.png' %}" />
+<script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+   
+
+    /* Custom styles for the box component */
+    .box {
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .box:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .chart-container{
+        width: 100%;
+        height: 400px;
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    .chart-container:hover {
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Style for the message boxes */
+    .messages {
+        margin-bottom: 2rem;
+    }
+
+
+    .messages ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .messages li {
+        background-color: #f0fdf4;
+        color: #15803d;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        border-radius: 0.375rem;
+        border: 1px solid #16a34a;
+        display: flex;
+        align-items: center;
+    }
+
+    .messages li i {
+        margin-right: 0.5rem;
+        color: #16a34a;
+    }
+
+    .order-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+
+    .order-table thead th {
+        background-color: #f0f0f0;
+        color: #333;
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 2px solid #ddd;
+        font-weight: 600;
+    }
+
+    .order-table tbody td {
+        padding: 0.75rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .order-table tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .order-table tbody tr:hover {
+        background-color: #f0f0f0;
+    }
+
+    .order-table tbody td strong {
+        color: #222;
+    }
+</style>
+</head>
+<body class="bg-gray-100 font-inter">
+<div class="flex h-screen">
+    <aside class="bg-blue-900 text-white w-64 p-4">
+        <div class="logo text-2xl font-semibold mb-8">Tableau de bord</div>
+        <nav>
+            <ul class="space-y-4">
+                {% load static %}
+                
+                <li>
+                    <a class="profile-icon-link-container" href="{% url 'profile' %}">
+                        <img src="{% if profile.profile_photo %}{{ profile.profile_photo.url }}{% else %}{% static 'images/default_profile.jpg' %}{% endif %}" alt="User Image" class="w-10 h-10 rounded-full">
+                        
+                    </a>
+
+                </li>
+                <li><div class="logout-container">
+                    <a href="{% url 'home' %}" class="logout-link">
+                        <i class="fas fa-sign-out-alt logout-icon"></i> Log Out
+                    </a>
+                </div><style>.logout-container {
+                    display: flex;
+                    align-items: center;
+                }
+                
+                .logout-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #e9e2e2;
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: 500;
+                    padding: 8px 12px;
+                    border-radius: 5px;
+                    transition: background-color 0.3s ease, color 0.3s ease;
+                }
+                
+                .logout-link:hover {
+                    background-color: #dc3545;
+                    color: #fff;
+                }
+                
+                .logout-icon {
+                    font-size: 16px;
+                }</style></li>
+                <li>
+                    <a href="{% url 'Home' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                        <i class="fas fa-tachometer-alt mr-2"></i> Accueil
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Categories_list2' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                        <i class="fas fa-newspaper mr-2"></i> Categories
+                    </a>
+                </li>
+               
+                <li>
+                    <a href="{% url 'navigation_dashboard' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                        <i class="fas fa-file-alt mr-2"></i> Pages
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="{% url 'liste_utilisateurs' %}" id="afficherUtilisateurs" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                        <i class="fas fa-users mr-2"></i> Utilisateurs
+                    </a>
+                </li>
+                </script>
+                <li>
+                    <a href="{% url 'produit_list1' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                        <i class="fas fa-tags mr-2"></i> produits
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'appearance' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                        <i class="fas fa-sliders-h mr-2"></i> Apparence
+
+                        
+                    </a>
+                </li>
+               
+              
+                
+                <li>
+                    <a href="{% url 'liste_produits' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                        <i class="fas fa-tools mr-2"></i> Outils liste_produits
+                    </a>
+                </li>
+               
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-6">
+        <h1 class="text-2xl font-semibold mb-8 text-gray-800">Tableau de bord</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-6">
+                <div class="box">
+                    <h1>
+                        <i class="fas {% if request.user.is_staff %}fa-user-shield{% else %}fa-user{% endif %}"></i>
+                        Bienvenue {{ request.user.username }} !
+                    </h1>
+                    <p>Vous pouvez accéder au dashboard.</p>
+                </div>
+
+                {% if messages %}
+                <div class="messages">
+                    <ul>
+                        {% for message in messages %}
+                        <li><i class="fas fa-exclamation-triangle"></i> {{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div class="box">
+                    <h2 class="text-xl font-semibold mb-4 text-green-600">Statistiques</h2>
+                    {% for utilisateur in utilisateurs %}
+                    <p class="text-gray-700"><strong class="font-semibold">Total des utilisateurs :</strong> {{ utilisateur.username }}</p>
+                    
+                    {% endfor %}
+                    <p class="text-gray-700"><strong class="font-semibold">Total des commandes :</strong> {{ total_commandes }}</p>
+                    <p class="text-gray-700"><strong class="font-semibold">Total des utilisateurs :</strong> {{ total_utilisateurs }}</p>
+                    <p class="text-gray-700"><strong class="font-semibold">Total des produits vendus :</strong> {{ total_produits_vendus }}</p>
+                    <h3 class="text-lg font-semibold mt-4 text-purple-600">Produits les plus vendus :</h3>
+                    <ul class="list-disc list-inside text-gray-600">
+                        {% for produit in produits_vendus %}
+                        <li>{{ produit.produit.nom }} - {{ produit.total_vendu }} ventes</li>
+                        {% endfor %}
+                    </ul>
+                    <h3 class="text-lg font-semibold mt-4 text-indigo-600">Détails des commandes :</h3>
+                    
+                    <table class="order-table">
+                        <thead>
+                            <tr>
+                                
+                                <th>Utilisateur</th>
+                                <th>Adresse</th>
+                                <th>Quantité</th>
+                                <th>Date</th>
+                                <th>Produits</th>
+                                <th>Payment </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cmd in commandes %}
+                            <tr>
+                                
+                                <td>{{ cmd.user.username }}</td>
+                                <td>{{ cmd.adresse_livraison }}</td>
+                                <td>{{ cmd.quantite }}</td>
+                                <td>{{ cmd.date_commande|date:"Y/m/d" }}</td>
+                                <td>
+                                    {% for p in cmd.produits.all %}
+                                        {{ p.nom }}{% if not forloop.last %}, {% endif %}
+                                    {% empty %}
+                                        -
+                                    {% endfor %}
+                                </td>
+                                <td>{{ cmd.Methode_paiement }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" style="text-align:center">Aucune commande trouvée</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="myChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Attendre que le DOM soit chargé
+    document.addEventListener('DOMContentLoaded', function() {
+        const chartElement = document.getElementById('myChart');
+        if (!chartElement) {
+            console.error("L'élément avec l'ID 'myChart' n'a pas été trouvé");
+            return;
+        }
+
+        const ctx = chartElement.getContext('2d');
+        const labels = [
+            {% for produit in produits_vendus %}
+                "{{ produit.produit.nom }}"{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        ];
+        const data = [
+            {% for produit in produits_vendus %}
+                {{ produit.total_vendu }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        ];
+       
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Produits les plus vendus',
+                    data: data,
+                    backgroundColor: ' rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(75, 192, 75, 0.7)',
+                    borderWidth: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Nombre de ventes par produit',
+                        font: {
+                            size: 18,
+                            family: 'Arial',
+                            color: '#'
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 14,
+                                family: 'Arial',
+                                color: '#555'
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                size: 12,
+                                family: 'Arial',
+                                color: '#666'
+                            }
+                        },
+                        grid: {
+                            color: '#e0e0e0'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                                family: 'Arial',
+                                color: '#666'
+                            }
+                        },
+                        grid: {
+                            color: '#e0e0e0'
+                        }
+                    }
+                }
+            }
+        });
+    });
+    
+    </script>
+    
+    
+    
+<script>
+    function applyColors() {
+
+    const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+    const textColor = localStorage.getItem('textColor') || '#000000';
+    const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+
+  
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+
+}
+
+
+document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+{% load static %}
+  <link rel="stylesheet" href="{% static 'CSS/style.css' %}" />
+  
+  
+    
+    <link rel="stylesheet" href="{% static 'css1/login.css' %}">
+
+  <link rel="stylesheet" href="{% static 'CSS/styl.css' %}" />
+  <link rel="stylesheet" href="{% static 'CSS/detaille.produit.css' %}" />
+  <link rel="stylesheet" href="{% static 'CSS/respansif.css' %}" />
+  <link rel="icon" href="{% static 'images/iPhone.png' %}" />
+  
+  <!-- Font Awesome -->
+  <!-- تحميل مكتبة SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+  <!-- Header -->
+  <header id="header">
+    <a href="{% url 'Home' %}">
+      <img class="logo" src="{% static 'images/iPhone.png' %}" width="95px" height="95px" alt="Logo Maison Décor" />
+  </a>
+  
+    <nav>
+      <ul id="navbar">
+        <li>
+          <a href="{% url 'Home' %}" class="{% if request.resolver_match.url_name == 'Home' %}active{% endif %}"><i class="fas fa-home"></i>
+            Home
+          </a>
+        </li>
+        <li>
+            <a href="{% url 'Categories_list2' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-newspaper mr-2"></i> Articles
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'produit_list1' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-tags mr-2"></i> produits
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'navigation_dashboard' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-file-alt mr-2"></i> Pages
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'liste_utilisateurs' %}" id="afficherUtilisateurs" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-users mr-2"></i> Utilisateurs
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'appearance' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-sliders-h mr-2"></i> Apparence
+
+                
+            </a>
+        </li>
+        <li><a href="{% url 'commandes_list' %}"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a></li>
+        
+        <li>
+          {% if user.is_authenticated %}
+          <a class="profile-icon-link-container" href="{% url 'profile' %}">
+              <img src="{{ profile.profile_photo.url }}" alt="User Image">
+          </a>
+      {% else %}
+          <a class="profile-icon-link-container" href="{% url 'login' %}">
+              <img src="{% static 'images1/default.svg' %}" alt="User Image">
+          </a>
+      {% endif %}</li>
+      
+        <li class="lg-bag">
+
+          <a href="#" id="Close"><i class="fa-solid fa-xmark"></i></a>
+      </ul>
+    </nav>
+  </header>

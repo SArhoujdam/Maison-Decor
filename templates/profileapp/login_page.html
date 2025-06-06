@@ -1,0 +1,80 @@
+{% load static %}
+
+
+{% include 'header.html' %}
+
+
+<div class="notification-container">
+    {% if user.is_authenticated %}
+        
+    {% else %}
+
+    {% endif %}
+    
+    <!-- Affichage des messages -->
+    <div class="notification">
+      {% if user.is_authenticated %}
+        
+      {% else %}
+          <p>Veuillez vous connecter.</p>
+      {% endif %}
+        {% for message in messages %}
+            <p {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+        
+    </div>
+</div>
+
+<script>
+    document.getElementById('cross').addEventListener('click', function() {
+        document.getElementsByClassName('notification-container')[0].style.display = 'none';
+    });
+</script>
+
+<main class="main-container">
+    <div class="container">
+        <h1 class="signup-heading">Log in</h1>
+        <div class="user-content-container user-profile-form-container">
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                <ul>
+                    <li class="name">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" id="username" class="username-input" placeholder="Username">
+                    </li>
+                    <li class="pass">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" class="pass-input" placeholder="Password">
+                    </li>
+                    <button class="signup-button" type="submit"> Log in </button>
+                    <p class="login-link">Don't have an account? <a href="{% url 'register' %}">Sign Up</a></p>
+                </ul>
+            </form>
+        </div>
+    </div>
+</main>
+<script>
+    function applyColors() {
+
+    const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+    const textColor = localStorage.getItem('textColor') || '#000000';
+    const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+
+  
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+
+    // const links = document.querySelectorAll('a');
+    // links.forEach(link => {
+    //     link.style.color = textColor;
+    // });
+}
+
+
+document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+{% load static %}
+{% include 'header.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <style>
+        /* أنماط CSS */
+        .payment-info-cod,
+        .payment-info-paypal,
+        .payment-info-credit_card {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .payment-info-cod label,
+        .payment-info-paypal label,
+        .payment-info-credit_card label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .payment-info-cod input[type="text"],
+        .payment-info-paypal input[type="email"],
+        .payment-info-credit_card input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <h2>Checkout</h2>
+{% if success %}
+    <p style="color: green;">✅quantity enabled !</p>
+{% elif error %}
+    <p style="color: red;">❌ Erreur : {{ error }}</p>
+{% endif %}
+        <div class="product-info">
+            {% if photo_url %}
+                <img src="{{ photo_url }}" alt="{{ nom_produit }}">
+            {% endif %}
+            <div>
+                <h3>{{ nom_produit }}</h3>
+                <p>Price: {{ prix_produit }} DH</p>
+            </div>
+        </div>
+
+        <form method="post" id="checkoutForm">
+            {% csrf_token %}
+            <div class="order-details">
+                <h3>votre Information</h3>
+                <image class="profile-image" src="{{ profile.profile_photo.url }}" alt="User Image" width="100px">
+                
+                    <style>.profile-image {
+                    margin: auto .3em auto auto;
+                    width: 2.5em;
+                    height: 2.5em; /* Assurez-vous que la hauteur est égale à la largeur */
+                    border-radius: 50%;
+                    object-fit: cover; /* S'assure que l'image remplit bien le cercle */
+                }
+                </style>                
+                <p class="username">{{ request.user.username }}</p>
+                <p class="user-title">{{ request.user.email }}</p>
+
+          
+            </div>
+
+            <div class="payment-details">
+                <h3>Shipping Address</h3>
+                <label for="adresse">Address:</label>
+                <input type="text" id="adresse" name="adresse" placeholder="Enter your address" required>
+
+                <label for="quantite">Quantity:</label>
+                <input type="number" id="quantite" name="quantite" placeholder="Enter your quantity" required>
+            </div>
+            <div class="payment-options">
+                <h3>Choose Payment Method</h3>
+                <label for="paypal">PayPal</label>
+                <input type="radio" id="paypal" name="payment_method" value="paypal" required>
+
+                <label for="credit_card">Credit Card</label>
+                <input type="radio" id="credit_card" name="payment_method" value="credit_card">
+
+                <label for="cod">Cash on Delivery</label>
+                <input type="radio" id="cod" name="payment_method" value="cod">
+            </div>
+
+            <div id="payment-info-container">
+                <div class="payment-info-cod" id="cod-info">
+                    <h3>Cash on Delivery Information</h3>
+                    <p>Please ensure you have the correct amount ready upon delivery.</p>
+                    <label for="cod_name">Name:</label>
+                    <input type="text" id="cod_name" name="cod_name">
+                    <label for="cod_phone">Phone Number:</label>
+                    <input type="text" id="cod_phone" name="cod_phone">
+                    
+                </div>
+
+                <div class="payment-info-paypal" id="paypal-info">
+                    <h3>PayPal Information</h3>
+                    <label for="paypal_email">PayPal Email:</label>
+                    <input type="email" id="paypal_email" name="paypal_email">
+                </div>
+
+                <div class="payment-info-credit_card" id="credit_card-info">
+                    <h3>Credit Card Information</h3>
+                    <label for="cc_number">Card Number:</label>
+                    <input type="text" id="cc_number" name="cc_number">
+                    <label for="cc_expiry">Expiry Date:</label>
+                    <input type="text" id="cc_expiry" name="cc_expiry" placeholder="MM/YY">
+                    <label for="cc_cvv">CVV:</label>
+                    <input type="text" id="cc_cvv" name="cc_cvv">
+                </div>
+            </div>
+
+            <div class="terms-conditions">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I agree to the terms and conditions</label>
+            </div>
+
+            <button type="submit">Place Order</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+            const codInfo = document.getElementById('cod-info');
+            const paypalInfo = document.getElementById('paypal-info');
+            const creditCardInfo = document.getElementById('credit_card-info');
+
+            function handlePaymentChange() {
+                codInfo.style.display = 'none';
+                paypalInfo.style.display = 'none';
+                creditCardInfo.style.display = 'none';
+
+                const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
+                if (selectedPayment) {
+                    if (selectedPayment.value === 'cash_on_delivery' || selectedPayment.value === 'cod') {
+                        codInfo.style.display = 'block';
+                        // Optionally add 'required' attribute to COD fields
+                        document.getElementById('cod_name').required = true;
+                        document.getElementById('cod_phone').required = true;
+                        document.getElementById('paypal_email').required = false;
+                        document.getElementById('cc_number').required = false;
+                        document.getElementById('cc_expiry').required = false;
+                        document.getElementById('cc_cvv').required = false;
+                    } else if (selectedPayment.value === 'paypal') {
+                        paypalInfo.style.display = 'block';
+                        // Optionally add 'required' attribute to PayPal fields
+                        document.getElementById('paypal_email').required = true;
+                        document.getElementById('cod_name').required = false;
+                        document.getElementById('cod_phone').required = false;
+                        document.getElementById('cc_number').required = false;
+                        document.getElementById('cc_expiry').required = false;
+                        document.getElementById('cc_cvv').required = false;
+                    } else if (selectedPayment.value === 'credit_card') {
+                        creditCardInfo.style.display = 'block';
+                        // Optionally add 'required' attribute to Credit Card fields
+                        document.getElementById('cc_number').required = true;
+                        document.getElementById('cc_expiry').required = true;
+                        document.getElementById('cc_cvv').required = true;
+                        document.getElementById('cod_name').required = false;
+                        document.getElementById('cod_phone').required = false;
+                        document.getElementById('paypal_email').required = false;
+                    }
+                }
+            }
+
+            paymentRadios.forEach(radio => {
+                radio.addEventListener('change', handlePaymentChange);
+            });
+
+            // Initialize on page load in case a default is selected
+            handlePaymentChange();
+        });
+    </script>
+</body>
+</html>

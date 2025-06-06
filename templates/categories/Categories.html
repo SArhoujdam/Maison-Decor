@@ -1,0 +1,52 @@
+{% block content %}
+{% include 'header.html' %}
+<h2>La liste des Catégories</h2>
+
+<!-- Bouton Ajouter une catégorie -->
+
+<!-- Modal for adding a category -->
+
+
+<!-- Liste des catégories -->
+<div id="sectionidfeatur" class="section-p1">
+    {% for category in categories %}
+        <div class="fe-box">
+            <a href="{% url 'categories:produits_par_categorie' category.slug %}">
+                <img src="{{ category.photo.url }}" alt="{{ category.nom }}" width="95px" height="95px">
+                <h6>{{ category.nom }}</h6>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+{% include 'footer.html' %}
+
+<!-- JavaScript for modals -->
+
+
+<script>
+    function applyColors() {
+
+    const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+    const textColor = localStorage.getItem('textColor') || '#000000';
+    const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+
+  
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+
+    // const links = document.querySelectorAll('a');
+    // links.forEach(link => {
+    //     link.style.color = textColor;
+    // });
+}
+
+
+document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+
+<!-- Styles for modal -->
+
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% load static %}
+<footer class="section-p1">
+  <div class="col">
+      <h4>Contact</h4>
+      <br>
+        <strong>Address:</strong> Marrakech, Morocco
+    <br>
+    <strong>Phone:</strong> +212 666 721 338
+    <br>
+    <strong>Hours:</strong> 24% Mon - Sat
+    </div>
+    <div class="follow">
+          <h4>Follow us</h4>
+          <div class="icon">
+            
+              <a href="https://facebook.com" aria-label="Facebook">
+                  <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+              </a>
+              <a href="https://instagram.com" aria-label="Instagram">
+                  <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+              </a>
+              <a href="https://linkedin.com" aria-label="LinkedIn">
+                  <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+              </a>
+              <a href="https://twitter.com" aria-label="Twitter">
+                  <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+              </a>
+          </div>
+      </div>
+  </div>
+
+  <div class="col">
+      <h4>About</h4>
+      <a href="./subpages/about.html">About Us</a>
+      <a href="./subpages/blog.html">Delivery Information</a>
+      <a href="./subpages/privacy.html">Privacy Policy</a>
+      <a href="./subpages/terms.html">Terms & Conditions</a>
+      <a href="{% url 'contact1' %}">Contact Us</a>
+  </div>
+
+  <div class="col">
+      <h4>My Account</h4>
+      <a href="{% url 'login' %}">Sign In</a>
+      <a href="./subpages/cart.html">View Cart</a>
+      <a href="./subpages/wishlist.html">My Wishlist</a>
+      <a href="./subpages/track-order.html">Track My Order</a>
+      <a href="{% url 'contact1' %}">Help</a>
+  </div>
+
+  <div class="pay">
+      <p>Secured Payment Gateways</p>
+      <img src="{% static 'images/pay.png' %}" alt="Payment Methods" />
+  </div>
+
+  <div class="copyright">
+      <img src="{% static 'images/iPhone.png' %}" width="95px" height="95px" alt="Maison Décor">
+      <p>©2024 Maison Décor</p>
+      {% load static %}
+      <script src="{% static 'JS/index.js' %}"></script>
+      <script src="{% static 'JS/script.js' %}"></script>
+  </div>
+</footer>
+
+</body>
+
+</html>

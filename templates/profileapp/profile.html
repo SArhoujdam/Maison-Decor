@@ -1,0 +1,61 @@
+{% load static %}
+
+
+{% include 'header.html' %}
+
+    <script>
+        var cross = document.getElementById('cross')
+        cross.addEventListener('click', ()=> {
+            document.getElementsByClassName('notification-container')[0].style.display = 'none';
+        })
+
+    </script>
+
+
+<main class="main-container">
+    <div class="container">
+        <div class="profile-photo-container">
+            <!-- Affichage de l'image de profil -->
+            <img src="{{ profile.profile_photo.url }}" alt="User Image" width="100px">
+        </div>
+        <div class="user-content-container">
+            <p class="username">{{ request.user.username }}</p>
+            <p class="user-email">{{ request.user.email }}</p>
+            <p class="user-desc">This is your profile, you can edit it in profile.</p>
+            <div class="profile-edit-link-container">
+                <button><a href="{% url 'edit_profile' %}">Edit</a></button>
+                
+                
+                <button><a href="{% url 'home' %}">Log Out</a></button>
+                {% if user.is_authenticated and user.is_superuser %}
+                <button><a href="{% url 'commandes_list' %}">dashboard</a></button>
+                {% endif %}
+                
+                
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    function applyColors() {
+
+    const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+    const textColor = localStorage.getItem('textColor') || '#000000';
+    const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+
+  
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+
+    // const links = document.querySelectorAll('a');
+    // links.forEach(link => {
+    //     link.style.color = textColor;
+    // });
+}
+
+
+document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+  </body>
+</html>

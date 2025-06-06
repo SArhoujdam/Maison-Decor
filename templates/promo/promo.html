@@ -1,0 +1,203 @@
+{% load static %}
+
+
+{% include 'header.html' %}
+
+
+<section >
+    <div class="image-container1">
+        <img src="{% static 'image2\_9e13fd9c-163f-4f8b-877a-213e68ffe87d.jpeg' %}" alt="Background Image" class="banner-image">
+        <div class="overlay-text">
+            <h4>Tous les produits sont disponibles selon votre choix et<span>
+                    les tailles que vous souhaitez -20%</span></h4>
+        </div>
+    </div>
+</section>
+<style>/* Section Newletter */
+   
+    
+     .image-container1 {
+        position: relative;
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(189, 12, 12, 0.1);
+    }
+    
+  .banner-image {
+        width: 110%;
+        height: 120%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+     .banner-image:hover {
+        transform: scale(1.05); /* Effet de zoom lors du survol */
+    }
+    
+     .overlay-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #e3e6f3;
+        text-align: center;
+        font-family: 'Arial', sans-serif;
+        z-index: 1;
+    }
+    
+     .overlay-text h4 {
+        font-size: 32px;
+        font-weight: bold;
+        line-height: 1.5;
+        text-shadow: 2px 2px 6px rgba(213, 198, 198, 0.759);
+    }
+    
+     .overlay-text span {
+        color: #ff0000;
+        font-size: 36px;
+        font-weight: bold;
+    }
+    
+    /* Effet de texte au survol */
+     .overlay-text:hover h4 {
+        color: #e8e3fc;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    
+     .overlay-text span:hover {
+        color: #6aff00;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        #newletter .overlay-text h4 {
+            font-size: 24px;
+        }
+    
+        #newletter .overlay-text span {
+            font-size: 28px;
+        }
+    }
+    </style>
+
+<section id="Prodact1" class="section-p1">
+    <h2>Nos produits associés à promo</h2>
+    <h6>Collection de produits </h6>
+    <div class="prodact-container">
+        {% for promo in promos %}
+        <div class="pro">
+            <img src="{{ promo.produit.photo.url }}" alt="{{ promo.produit.nom }}"onclick="afficherImageGrande(this)">
+            <a href="{% url 'produit_detail' promo.produit.slug %}">
+                
+            </a>
+            <div class="des">
+                <span>Maison Decor</span>
+                <h5>{{ promo.produit.nom }}</h5>
+                <p class="description-line">{{ promo.produit.description }}</p>
+                <div class="STARS">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <h4>{{ promo.produit.prix }} DH</h4>
+            </a>
+    
+                
+    
+            <a href="{% url 'produit_detail' promo.produit.slug %}">
+                <button class="shop-btn">Shop</button>
+                </a>
+                
+            </div>
+    
+            <a href="subpages/cart.html" class="cart">
+                <i class="fa-solid fa-bag-shopping"></i>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+<div id="modal" class="modal">
+    <span class="close" onclick="fermerModal()">&times;</span>
+    <img class="modal-content" id="img-grande">
+</div>
+<section class="pagination">
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; première</a>
+            <a href="?page={{ page_obj.previous_page_number }}">précédente</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">suivante</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">dernière &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+</section>
+
+<style>
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    font-family: Arial, sans-serif;
+}
+
+.pagination .step-links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.pagination a,
+.pagination span.current {
+    padding: 8px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+}
+
+.pagination a {
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+.pagination a:hover {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}
+
+.pagination span.current {
+    background-color: #84e0dc;
+    color: white;
+    border-color: #4CAF50;
+    cursor: default;
+}
+</style>
+
+
+
+
+
+
+
+<!-- ✅ JavaScript -->
+
+    {% include 'footer.html' %}

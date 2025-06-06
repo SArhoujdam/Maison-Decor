@@ -1,0 +1,153 @@
+{% load static %}
+
+
+{% include 'header.html' %}
+<title>{{ produit.nom }}</title>
+<br>
+<br>
+<br>
+<div class="product-detail">
+    <img src="{{ produit.photo.url }}" alt="{{ produit.nom }}">
+    <h1>{{ produit.nom }}</h1>
+    <p>{{ produit.description }}</p>
+    <h3>{{ produit.prix }} DH</h3>
+    <br>
+    <button class="shop-btn" onclick="allerPagePaiement(event, '{{ produit.nom }}', '{{ produit.prix }}', '{{ produit.photo.url }}')">Shop</button>
+
+    <script>
+        const loginUrl = "{% url 'login' %}";
+                        const utilisateurConnecte = {{ request.user.is_authenticated|lower }};
+
+                        function estUtilisateurConnecte() {
+                            return utilisateurConnecte;
+                        }
+
+                function allerPagePaiement(event, nomProduit, prixProduit, photoUrl) {
+    event.preventDefault();
+
+    const checkoutUrl = `/checkout/?nom=${encodeURIComponent(nomProduit)}&prix=${encodeURIComponent(prixProduit)}&photo=${encodeURIComponent(photoUrl)}`;
+
+    if (estUtilisateurConnecte()) {
+        window.location.href = checkoutUrl;
+    } else {
+        
+        fetch("/save_redirect_url/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: JSON.stringify({url: checkoutUrl})
+        }).then(() => {
+            window.location.href = loginUrl;
+        });
+    }
+}
+
+
+                        // document.addEventListener('DOMContentLoaded', function() {
+                        //     const urlPaiementApresConnexion = sessionStorage.getItem('urlPaiementApresConnexion');
+                        //     if (urlPaiementApresConnexion) {
+                        //         sessionStorage.removeItem('urlPaiementApresConnexion');
+                        //         window.location.href = urlPaiementApresConnexion;
+                        //     }
+                        // });
+
+
+                        //////
+                        document.addEventListener('DOMContentLoaded', function() {
+    const descriptionLines = document.querySelectorAll('.description-line.truncated');
+
+    descriptionLines.forEach(line => {
+        const fullDescription = line.getAttribute('data-full-description');
+        const truncatedDescription = line.textContent.trim();
+        const readMoreLink = line.querySelector('.read-more');
+
+        readMoreLink.addEventListener('click', function(event) {
+            event.stopPropagation(); // منع انتشار الحدث إلى العناصر الأبوية
+            if (line.classList.contains('truncated')) {
+                line.textContent = fullDescription;
+                line.classList.remove('truncated');
+                readMoreLink.textContent = "اقرأ أقل";
+            } else {
+                line.textContent = truncatedDescription;
+                line.classList.add('truncated');
+                readMoreLink.textContent = "lire la suite";
+            }
+        });
+    });
+});
+//////////////////////
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+</script>
+    </script>
+</div>
+
+<h2>Produits similaires</h2>
+<div class="similar-products">
+    {% for p in produits_similaires %}
+        <div class="pro">
+            <a href="{% url 'produit_detail' p.id %}">
+                <img src="{{ p.photo.url }}" alt="{{ p.nom }}">
+                <h4>{{ p.nom }}</h4>
+                <p>{{ p.prix }} DH</p>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+<script>
+    function applyColors() {
+
+    const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+    const textColor = localStorage.getItem('textColor') || '#000000';
+    const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+
+  
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+
+    // const links = document.querySelectorAll('a');
+    // links.forEach(link => {
+    //     link.style.color = textColor;
+    // });
+}
+
+
+document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% include 'footer.html' %}

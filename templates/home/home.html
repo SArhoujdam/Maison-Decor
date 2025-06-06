@@ -1,0 +1,222 @@
+{% load static %}
+{% include 'header.html' %}
+
+<section1 id="img-slider">
+    <div class="slideactive">
+        <img src="{% static 'images/bgPNG.PNG' %}" alt="Image" >
+        <div class="div_info">
+            <h2 class="select-none">BIENVENUE DANS NOTRE BOUTIQUE</h2>
+            <h3 class="select-nine">Traditionnels faits à la main 100%</h3>
+        </div>
+    </div>
+
+</section1>
+
+<section id="Prodact1" class="section-p1">
+    <h2>Nos produits associés à home</h2>
+    <h6>Collection de produits depuis le modèle Home</h6>
+    <div class="prodact-container">
+        {% for produit in products %}
+        
+        <div class="pro">
+            <img src="{{ produit.photo.url }}" alt="{{ produit.nom }}"onclick="afficherImageGrande(this)">
+            <a href="{% url 'produit_detail' produit.id %}">
+                
+            </a>
+            <a href="{% url 'produit_detail' produit.slug %}" class="prodact-container"></a>
+            <div class="des">
+                <span>Maison Decor</span>
+                <h5>{{ produit.nom }}</h5>
+                <p class="description-line">{{ produit.description }}</p>
+                <div class="STARS">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <h4>{{ produit.prix }} DH</h4>
+            </a>
+    
+                
+    
+            <a href="{% url 'produit_detail' produit.slug %}">
+                    <button class="shop-btn">Shop</button>
+                </a>
+                </a>
+            </div>
+    
+            <a href="subpages/cart.html" class="cart">
+                <i class="fa-solid fa-bag-shopping"></i>
+            </a>
+
+        </div>
+        
+        {% endfor %}
+    </div>
+</section>
+<div id="modal" class="modal">
+    <span class="close" onclick="fermerModal()">&times;</span>
+    <img class="modal-content" id="img-grande">
+</div>
+<section class="pagination">
+    <div class="pagination-links">
+        {% if products.has_previous %}
+            <a href="?page=1">&laquo; Première</a>
+            <a href="?page={{ products.previous_page_number }}">Précédente</a>
+        {% endif %}
+
+        <span>Page {{ products.number }} sur {{ products.paginator.num_pages }}</span>
+
+        {% if products.has_next %}
+            <a href="?page={{ products.next_page_number }}">Suivante</a>
+            <a href="?page={{ products.paginator.num_pages }}">Dernière &raquo;</a>
+        {% endif %}
+    </div>
+</section>
+<style>.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #eee;
+}
+
+.pagination-links a,
+.pagination-links span {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.pagination-links a:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination-links .current {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination-links .disabled {
+    color: #999;
+    border-color: #ddd;
+    pointer-events: none;
+}</style>
+
+
+
+ 
+
+<!-- ✅ JavaScript -->
+
+
+<section id="newletter" class="section-m2">
+    <div class="image-container">
+    <img src="{% static 'images/backgrund/background.jpg' %}" alt="Background Image" class="banner-image">
+    <div class="overlay-text">
+    <h4>Repair Services</h4>
+    <h2>up to <span>20% </span>all products</h2>
+    <a href="{% url 'promo' %}">
+        <button class="normal">
+            <h3>En plus</h3>
+        </button>
+    </a>
+    </div>
+    </div>
+</section>
+
+<!--Small Banner  -->
+<section id="banner3">
+    <div class="banner-box">
+        <img src="{% static 'images/bgPNG.PNG' %}" alt="Decor de chambre du bois" style="cursor: pointer;" onclick="openNewchambre()">
+        <h4>Decor de chambre du bois</h4>
+    </div>
+    
+    <script>
+ function openNewchambre() {
+    window.location.href = "{% url 'categories:produits_par_categorie' 'placard' %}";
+}
+function afficherPagecuisine() {
+    window.location.href = "{% url 'categories:produits_par_categorie' 'cuisine' %}";
+}
+function afficherPageboites() {
+    window.location.href = "{% url 'categories:produits_par_categorie' 'caisse' %}";
+}
+function afficherPageplafonds() {
+    window.location.href = "{% url 'categories:produits_par_categorie' 'les-plafonds' %}";
+}
+function afficherPageMiroire() {
+    window.location.href = "{% url 'categories:produits_par_categorie' 'miroire' %}";
+}
+
+    </script>
+    <div class="banner-box">
+        <img src="{% static 'images/backgrund/Cuisine.jpg' %}" alt="" onclick="afficherPagecuisine()">
+        <h4>Decor cuisine du bois</h4> 
+    </div>
+</section>
+<!-- Feauture Banner -->
+<section id="banner3">
+    <div class="banner-box">
+        <img src="{% static 'images/backgrund/boit.jpg' %}" alt="" onclick="afficherPageboites()">
+        <h4>les boites en bois</h4>
+
+    </div>
+    <div class="banner-box">
+        <img src="{% static 'images/backgrund/plafont.jpeg' %}" alt="" onclick="afficherPageplafonds()">
+        <h4>plafond en bois</h4>
+    </div>
+
+    <div class="banner-box">
+        <img src="{% static 'images/backgrund/engle de miroir.jpg' %}" alt="" onclick="afficherPageMiroire()">
+        <h4>Miroire en bois</h4>
+    </div>
+</section>
+<br>
+<br>
+
+<!-- NewsLetter -->
+
+{% load static %}
+<section id="newletter" class="section-m2">
+    <a href="{% url 'Sur_cammand' %}">
+    <!-- Ajout d'une image en fond -->
+    <div class="image-container">
+        <img src="{% static 'images/backgrund/machine.jpg' %}" alt="Produits disponibles" class="banner-image">
+        <div class="overlay-text">
+            <h3>Tous les produits sont disponibles selon votre choix et <span>les tailles que vous souhaitez</span></h3>
+        </div>
+    </div>
+</section>
+<script>
+    function applyColors() {
+
+const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+const textColor = localStorage.getItem('textColor') || '#000000';
+const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+
+
+document.body.style.backgroundColor = backgroundColor;
+document.body.style.color = textColor;
+document.body.style.fontFamily = fontFamily;
+
+
+}
+
+
+document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+
+{% include 'footer.html' %}
+
+
+
+

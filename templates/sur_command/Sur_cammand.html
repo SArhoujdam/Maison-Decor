@@ -1,0 +1,127 @@
+{% block content %}
+{% include 'header.html' %}
+{% load static %}
+<title>Service sur commande</title>
+
+
+
+
+<div class="paraaa">
+  <br>
+  <h3>Achetez votre produit en fonction de votre choix de tailles et de type de bois</h3>
+  <br>
+</div>
+
+<br>
+
+<main class="main-container">
+  <div class="container"></div>
+
+  <br>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <h1>Service sur commande</h1>
+    {% if success %}
+    <p style="color: green;">✅ Email envoyé avec succès !</p>
+{% elif error %}
+    <p style="color: red;">❌ Erreur : {{ error }}</p>
+{% endif %}
+
+    <div class="mb-3">
+      <label for="categorie_id">Catégorie</label>
+            <select name="categorie_id" id="categorie_id" required>
+              
+                <option value="" disabled selected>Choisissez une catégorie</option>
+                {% for categorie in categories %}
+                <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
+                {% endfor %}
+            </select><br><br>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Longueur (cm)</label>
+      <input type="number" name="length" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Hauteur (cm)</label>
+      <input type="number" name="height" class="form-control" required>
+    </div>
+
+   <label>Choisir couleur:</label>
+<select id="colorSelect" name="color" class="form-select">
+  <option value="">Sélectionner une couleur</option>
+  <option value="brown" data-color="#964B00">Marron</option>
+  <option value="lightoak" data-color="#D2B48C">Chêne clair</option>
+  <option value="walnut" data-color="#773F1A">Noyer</option>
+  <option value="white" data-color="#FFFFFF">Blanc</option>
+  <option value="black" data-color="#000000">Noir</option>
+</select>
+
+<div id="colorPreview" style="width:40px; height:40px; border:1px solid #000; margin-top:10px;"></div>
+
+<script>
+  const select = document.getElementById('colorSelect');
+  const preview = document.getElementById('colorPreview');
+
+  select.addEventListener('change', () => {
+    const selected = select.options[select.selectedIndex];
+    const color = selected.getAttribute('data-color');
+    if(color){
+      preview.style.backgroundColor = color;
+    } else {
+      preview.style.backgroundColor = 'transparent';
+    }
+  });
+</script>
+
+
+
+    <div class="mb-3">
+      <label class="form-label">Envoyer un modèle (image)</label>
+     
+      <input type="file" name="image_model" class="form-control" accept="image/*">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Votre nom</label>
+      <input type="text" name="user_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Votre email</label>
+      <input type="email" name="user_email" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Message supplémentaire</label>
+      <textarea name="message" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Valider la commande</button>
+  </form>
+
+  <br><br>
+</main>
+
+<script>
+  function applyColors() {
+    const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+    const textColor = localStorage.getItem('textColor') || '#000000';
+    const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+  }
+
+  document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+
+
+
+
+{% include 'footer.html' %}
+{% endblock %}

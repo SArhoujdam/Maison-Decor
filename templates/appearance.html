@@ -1,0 +1,236 @@
+{% load static %}
+  <link rel="stylesheet" href="{% static 'CSS/style.css' %}" />
+  
+  
+    
+    <link rel="stylesheet" href="{% static 'css1/login.css' %}">
+
+  <link rel="stylesheet" href="{% static 'CSS/styl.css' %}" />
+  <link rel="stylesheet" href="{% static 'CSS/detaille.produit.css' %}" />
+  <link rel="stylesheet" href="{% static 'CSS/respansif.css' %}" />
+  <link rel="icon" href="{% static 'images/iPhone.png' %}" />
+  
+  <!-- Font Awesome -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+  <!-- Header -->
+  <header id="header">
+    <a href="{% url 'Home' %}">
+      <img class="logo" src="{% static 'images/iPhone.png' %}" width="95px" height="95px" alt="Logo Maison Décor" />
+  </a>
+  
+    <nav>
+      <ul id="navbar">
+        <li>
+          <a href="{% url 'Home' %}" class="{% if request.resolver_match.url_name == 'Home' %}active{% endif %}"><i class="fas fa-home"></i>
+            Home
+          </a>
+        </li>
+        <li>
+            <a href="{% url 'Categories_list2' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-newspaper mr-2"></i> Articles
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'produit_list1' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-tags mr-2"></i> produits
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'navigation_dashboard' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-file-alt mr-2"></i> Pages
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'liste_utilisateurs' %}" id="afficherUtilisateurs" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-users mr-2"></i> Utilisateurs
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'appearance' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-sliders-h mr-2"></i> Apparence
+
+                
+            </a>
+        </li>
+        <li><a href="{% url 'commandes_list' %}"><i class="fas fa-tachometer-alt mr-2"></i>Dashboard</a></li>
+        
+        <li>
+          {% if user.is_authenticated %}
+          <a class="profile-icon-link-container" href="{% url 'profile' %}">
+              <img src="{{ profile.profile_photo.url }}" alt="User Image">
+          </a>
+      {% else %}
+          <a class="profile-icon-link-container" href="{% url 'login' %}">
+              <img src="{% static 'images1/default.svg' %}" alt="User Image">
+          </a>
+      {% endif %}</li>
+      
+        <li class="lg-bag">
+
+          <a href="#" id="Close"><i class="fa-solid fa-xmark"></i></a>
+      </ul>
+    </nav>
+  </header>
+  <style>
+        body {
+            font-family: sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+        }
+
+        input[type="color"], select {
+            margin-top: 10px;
+            padding: 5px;
+            width: 200px;
+        }
+
+        button {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+
+
+    <div class="container">
+        <h1>appearance</h1>
+
+        <label for="backgroundColor">background color :</label>
+        <input type="color" id="backgroundColor" value="{{ background_color }}">
+
+        <label for="textColor"> color de text </label>
+        <input type="color" id="textColor" value="{{ text_color }}">
+
+        <label for="fontFamily">police:</label>
+        <select id="fontFamily">
+            <option value="sans-serif" {% if font_family == 'sans-serif' %}selected{% endif %}>police sans plus </option>
+            <option value="serif" {% if font_family == 'serif' %}selected{% endif %}>police serif</option>
+            <option value="monospace" {% if font_family == 'monospace' %}selected{% endif %}>police monospace </option>
+        </select>
+
+        <hr style="margin: 40px 0;">
+
+        <label for="navbarBgColor">background color navbar:</label>
+        <input type="color" id="navbarBgColor" value="{{ navbar_bg_color }}">
+
+        <label for="navbarLinkColor">color navbar links:</label>
+        <input type="color" id="navbarLinkColor" value="{{ navbar_link_color }}">
+
+        <button id="applyChanges"> pratique les changements</button>
+        <button id="saveChanges">sauvegarder les changements</button>
+    </div>
+
+    <script>
+        const backgroundColorInput = document.getElementById('backgroundColor');
+        const textColorInput = document.getElementById('textColor');
+        const fontFamilySelect = document.getElementById('fontFamily');
+        const navbarBgColorInput = document.getElementById('navbarBgColor');
+        const navbarLinkColorInput = document.getElementById('navbarLinkColor');
+        const applyBtn = document.getElementById('applyChanges');
+        const saveBtn = document.getElementById('saveChanges');
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function applyColors() {
+            const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+            const textColor = localStorage.getItem('textColor') || '#000000';
+            const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+            const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+            const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+            document.body.style.backgroundColor = backgroundColor;
+            document.body.style.color = textColor;
+            document.body.style.fontFamily = fontFamily;
+
+            const navbar = document.querySelector('header, nav, #header');
+            const navLinks = document.querySelectorAll('nav a');
+
+            if (navbar) navbar.style.backgroundColor = navbarBgColor;
+            navLinks.forEach(link => {
+                link.style.color = navbarLinkColor;
+            });
+
+            backgroundColorInput.value = backgroundColor;
+            textColorInput.value = textColor;
+            fontFamilySelect.value = fontFamily;
+            navbarBgColorInput.value = navbarBgColor;
+            navbarLinkColorInput.value = navbarLinkColor;
+        }
+
+        function saveColors() {
+            const backgroundColor = backgroundColorInput.value;
+            const textColor = textColorInput.value;
+            const fontFamily = fontFamilySelect.value;
+            const navbarBgColor = navbarBgColorInput.value;
+            const navbarLinkColor = navbarLinkColorInput.value;
+
+            fetch('/save_appearance/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify({
+                    backgroundColor,
+                    textColor,
+                    fontFamily,
+                    navbarBgColor,
+                    navbarLinkColor
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('backgroundColor', backgroundColor);
+                    localStorage.setItem('textColor', textColor);
+                    localStorage.setItem('fontFamily', fontFamily);
+                    localStorage.setItem('navbarBgColor', navbarBgColor);
+                    localStorage.setItem('navbarLinkColor', navbarLinkColor);
+                    alert(' les changements ont été enregistrés .');
+                    applyColors();
+                } else {
+                    alert('  une erreur est survenue.');
+                }
+            });
+        }
+
+        
+        document.addEventListener('DOMContentLoaded', applyColors);
+        applyBtn.addEventListener('click', applyColors);
+        saveBtn.addEventListener('click', saveColors);
+    </script>
+
+</body>
+</html>

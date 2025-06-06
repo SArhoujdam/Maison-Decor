@@ -1,0 +1,5 @@
+{
+    "python.analysis.autoImportCompletions": true,
+    "material-icon-theme.activeIconPack": "angular",
+    "material-icon-theme.enableLogging": true
+}
