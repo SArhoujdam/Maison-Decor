@@ -129,9 +129,12 @@
 <div id="add-popup" class="popup">
     <div class="popup-content">
         <span class="close-popup" onclick="closePopup('add-popup')">&times;</span>
+        <br>
+        
         <h2>Ajouter un produit</h2>
         <form action="{% url 'ajouter_produit' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            <br>
             <label for="nom">Nom</label>
             <input type="text" name="nom" id="nom" required><br><br>
 
@@ -155,6 +158,7 @@
             <input type="file" name="photo" id="photo" required><br><br>
 
             <button type="submit">Ajouter</button>
+            <button type="button"  h>Annuler</button>
         </form>
     </div>
 </div>
@@ -193,9 +197,37 @@
             <input type="file" name="photo"><br>
             
             <button type="submit">Enregistrer</button>
+            <button type="button" onclick="closePopup('delete-popup-{{ produit.id }}')">Annuler</button>
         </form>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+        const textColor = localStorage.getItem('textColor') || '#000000';
+        const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+        const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+        const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+        // Appliquer les styles sur le body
+        document.body.style.backgroundColor = backgroundColor;
+        document.body.style.color = textColor;
+        document.body.style.fontFamily = fontFamily;
+
+        // Appliquer les styles sur le navbar
+        const navbar = document.querySelector('header, nav, #header');
+        const navLinks = document.querySelectorAll('nav a');
+
+        if (navbar) {
+            navbar.style.backgroundColor = navbarBgColor;
+        }
+
+        navLinks.forEach(link => {
+            link.style.color = navbarLinkColor;
+        });
+    });
+</script>
+
 {% endfor %}
 
 <!-- Delete Product Confirmation Popup -->

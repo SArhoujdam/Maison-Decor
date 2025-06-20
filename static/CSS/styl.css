@@ -92,7 +92,7 @@ button.white {
   align-items: center;
   padding: 20px 80px;
   background-color: #e3e6f3;
-  /*box-shadow: 5px 15px rgba(0, 0, 0, 06);*/
+
   position: sticky;
   top: 0;
   left: 0;
@@ -376,6 +376,7 @@ right: 15px;
   color: var(--primary-color);
   line-height: 1;
 }
+
 #sectionidfeatur .fe-box:nth-child(1) h6 {
   background-color: #cecdbb;
 }

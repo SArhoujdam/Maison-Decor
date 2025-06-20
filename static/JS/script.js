@@ -17,22 +17,9 @@ function afficherImageGrande() {
     imgGrande.src = img.src;
 }
 function afficherPagelarge_choix() {
-    window.location.href = ("/subpages (1)/categories.html"); 
+    window.location.href = ("{% url 'categories:categories_list' %}"); 
 }
-function afficherPagequalité() {
-    window.location.href = ("/subpages (1)/contact.html");
-}
-function afficherPageinformations() {
-    window.location.href = ("/subpages (1)/about.html"); 
-}
-function afficherPageConseils() {
-    window.location.href = ("/subpages (1)/Conseils.html"); 
-}
-function afficherPagePromotions() {
-    window.location.href = ("/subpages (1)/promo.html"); 
-}
-function afficherPageService() {
-    window.location.href = ("/subpages (1)/service.html"); 
+
 }
 //page categoriesafficherPagePromotions
 
@@ -67,6 +54,31 @@ eyeIcon.addEventListener('click', () => {
     eyeIcon.classList.add('fa-eye');
   }
 });  
+document.addEventListener('DOMContentLoaded', function () {
+    const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+    const textColor = localStorage.getItem('textColor') || '#000000';
+    const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+    const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+    const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+    // Appliquer les styles sur le body
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+
+    // Appliquer les styles sur le navbar
+    const navbar = document.querySelector('header, nav, #header');
+    const navLinks = document.querySelectorAll('nav a');
+
+    if (navbar) {
+        navbar.style.backgroundColor = navbarBgColor;
+    }
+
+    navLinks.forEach(link => {
+        link.style.color = navbarLinkColor;
+    });
+});
+
 function verifierForm() {
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;

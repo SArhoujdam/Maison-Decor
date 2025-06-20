@@ -67,9 +67,9 @@
                     <style>.profile-image {
                     margin: auto .3em auto auto;
                     width: 2.5em;
-                    height: 2.5em; /* Assurez-vous que la hauteur est égale à la largeur */
+                    height: 2.5em; 
                     border-radius: 50%;
-                    object-fit: cover; /* S'assure que l'image remplit bien le cercle */
+                    object-fit: cover; 
                 }
                 </style>                
                 <p class="username">{{ request.user.username }}</p>
@@ -77,6 +77,7 @@
 
           
             </div>
+<p><strong>Total à payer :</strong> <span id="prix_total">0.00</span> DH</p>
 
             <div class="payment-details">
                 <h3>Shipping Address</h3>
@@ -84,7 +85,8 @@
                 <input type="text" id="adresse" name="adresse" placeholder="Enter your address" required>
 
                 <label for="quantite">Quantity:</label>
-                <input type="number" id="quantite" name="quantite" placeholder="Enter your quantity" required>
+<input type="number" id="quantite" name="quantite" placeholder="Enter your quantity" required>
+
             </div>
             <div class="payment-options">
                 <h3>Choose Payment Method</h3>
@@ -134,6 +136,27 @@
             <button type="submit">Place Order</button>
         </form>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantiteInput = document.getElementById('quantite');
+        const prixTotalSpan = document.getElementById('prix_total');
+        const prixUnitaire = parseFloat("{{ prix_produit|floatformat:2 }}");
+
+        function updatePrixTotal() {
+            const quantite = parseInt(quantiteInput.value) || 0;
+            const total = quantite * prixUnitaire;
+            prixTotalSpan.textContent = total.toFixed(2);
+        }
+
+        if (quantiteInput) {
+            quantiteInput.addEventListener('input', updatePrixTotal);
+        }
+
+        // Appel initial pour charger un total s'il y a une valeur pré-remplie
+        updatePrixTotal();
+    });
+</script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -188,5 +211,32 @@
             handlePaymentChange();
         });
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+        const textColor = localStorage.getItem('textColor') || '#000000';
+        const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+        const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+        const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+        // Appliquer les styles sur le body
+        document.body.style.backgroundColor = backgroundColor;
+        document.body.style.color = textColor;
+        document.body.style.fontFamily = fontFamily;
+
+        // Appliquer les styles sur le navbar
+        const navbar = document.querySelector('header, nav, #header');
+        const navLinks = document.querySelectorAll('nav a');
+
+        if (navbar) {
+            navbar.style.backgroundColor = navbarBgColor;
+        }
+
+        navLinks.forEach(link => {
+            link.style.color = navbarLinkColor;
+        });
+    });
+</script>
+
 </body>
 </html>

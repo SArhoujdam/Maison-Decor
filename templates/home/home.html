@@ -12,16 +12,67 @@
 
 </section1>
 
+<div id="sectionidfeatur" class="section-p1">
+        <div class="fe-box" >
+            <img src="{% static 'images/feater/dosser.png' %}" alt="">
+            <h6>large choix</h6>
+        </div>
+        <div class="fe-box" >
+            <img src="{% static 'images/feater/100;PNG.png' %}" alt="">
+            <h6>qualité</h6>
+        </div>
+        <div class="fe-box" >
+            <img src="{% static 'images/feater/wood-icon-png.jpg' %}" alt="">
+            <h6>informations<br> technique</h6>
+        </div>
+        <div class="fe-box">
+            <img src="{% static 'images/feater/advice.jpg' %}" alt="">
+
+            <h6>Conseils</h6>
+        </div>
+        <div class="fe-box" >
+            <img src="{% static 'images/feater/promotion.png' %}"  alt="">
+            <h6>promotions</h6>
+        </div>
+        <div class="fe-box">
+            <img src="{% static 'images/feater/6070926;PNG.png' %}"  alt="">
+            <h6>Service</h6>
+        </div>
+        <style>/* Styles par défaut (téléphone) */
+.fe-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12px;
+  background-color: #fff;
+  
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin: 8px;
+}
+
+
+
+.fe-box h6 {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+}
+</style>
+    </div>
+
+
+
+
 <section id="Prodact1" class="section-p1">
     <h2>Nos produits associés à home</h2>
-    <h6>Collection de produits depuis le modèle Home</h6>
+    
     <div class="prodact-container">
         {% for produit in products %}
         
         <div class="pro">
             <img src="{{ produit.photo.url }}" alt="{{ produit.nom }}"onclick="afficherImageGrande(this)">
             <a href="{% url 'produit_detail' produit.id %}">
-                
             </a>
             <a href="{% url 'produit_detail' produit.slug %}" class="prodact-container"></a>
             <div class="des">
@@ -35,20 +86,91 @@
                     <i class="fa-solid fa-star"></i>
                     <i class="fa-solid fa-star"></i>
                 </div>
+                 {% if user.is_staff %}
+    <p>Quantité : {{ produit.quantite }}</p>
+  {% endif %}
                 <h4>{{ produit.prix }} DH</h4>
             </a>
-    
-                
-    
             <a href="{% url 'produit_detail' produit.slug %}">
                     <button class="shop-btn">Shop</button>
                 </a>
-                </a>
-            </div>
+               
+            
+   {% if produit.quantite <= 0 %}
+  <div class="out-of-stock-message" style="color: red; font-weight: bold;">
+            Produit non disponible
+         
+        </div>
     
-            <a href="subpages/cart.html" class="cart">
-                <i class="fa-solid fa-bag-shopping"></i>
-            </a>
+  </button>
+{% else %}
+  <form id="add-to-cart-form-{{ produit.id }}"
+        action="{% url 'add_to_cart' produit.id %}"
+        method="post"
+        class="add-to-cart-form"
+        data-quantity="{{ produit.quantite }}">
+    {% csrf_token %}
+    <button type="submit" class="cart" style="background: none; border: none;">
+      <i class="fa-solid fa-bag-shopping"></i>
+    </button>
+  </form>
+{% endif %}
+  
+       </div>
+
+<div id="cart-message-{{ produit.id }}"></div>
+
+
+<script>
+document.querySelectorAll('.add-to-cart-form').forEach(form => {
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const quantity = parseInt(form.getAttribute('data-quantity'), 10);
+    const produitId = form.id.split('-').pop();
+    const messageBox = document.getElementById('cart-message-' + produitId);
+
+    if (quantity === 0) {
+      messageBox.innerText = "Produit non disponible ❌";
+      messageBox.style.color = "red";
+      return; // Ne continue pas l’envoi
+    }
+
+    const url = form.action;
+    const formData = new FormData(form);
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === "success") {
+        messageBox.innerText = "Produit ajouté au panier avec succès ✅";
+        messageBox.style.color = "green";
+      } else {
+        messageBox.innerText = "Erreur lors de l'ajout au panier ❌";
+        messageBox.style.color = "red";
+      }
+    })
+    .catch(error => {
+      messageBox.innerText = "Erreur réseau.";
+      messageBox.style.color = "orange";
+    });
+  });
+});
+</script>
+
+
+
+<span class="cart-count" data-product-id="{{ produit.id }}"></span>
+
+
+
 
         </div>
         
@@ -213,7 +335,64 @@ document.body.style.fontFamily = fontFamily;
 
 
 document.addEventListener('DOMContentLoaded', applyColors);
+
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+        const textColor = localStorage.getItem('textColor') || '#000000';
+        const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+        const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+        const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+        // Appliquer les styles sur le body
+        document.body.style.backgroundColor = backgroundColor;
+        document.body.style.color = textColor;
+        document.body.style.fontFamily = fontFamily;
+
+        // Appliquer les styles sur le navbar
+        const navbar = document.querySelector('header, nav, #header');
+        const navLinks = document.querySelectorAll('nav a');
+
+        if (navbar) {
+            navbar.style.backgroundColor = navbarBgColor;
+        }
+
+        navLinks.forEach(link => {
+            link.style.color = navbarLinkColor;
+        });
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const forms = document.querySelectorAll('.add-to-cart-form');
+  forms.forEach(form => {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const productId = form.action.match(/(\d+)\/$/)[1];
+      const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          const countSpan = document.querySelector(`.cart-count[data-product-id="${productId}"]`);
+          if (countSpan) countSpan.textContent = data.qty;
+        }
+      })
+      .catch(console.error);
+    });
+  });
+});
+</script>
+
+
 
 {% include 'footer.html' %}
 

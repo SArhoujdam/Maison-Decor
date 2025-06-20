@@ -11,13 +11,14 @@ from profileapp.views import login_view
 
 urlpatterns = [
     path('', include('Home.urls')),
-    
+    path('update-quantity/<int:produit_id>/', views.update_quantity, name='update_quantity'),
+
     path('admin/', admin.site.urls),
     path('Categories/',include('Categories.urls')),
     path('contact_app/', include('contact_app.urls')),  
     path('profileapp/', include('profileapp.urls')),
     path('Home/',include('Home.urls')),
-    
+   
     path('promo/',include('promo.urls')),
     path('Sur_cammand/',include('Sur_cammand.urls')),
     path('checkout/', views.checkout, name='checkout'),
@@ -44,11 +45,13 @@ path('produit_list/', views.produit_list, name='produit_list1'),
  path('ajouter-produit/', views.ajouter_produit, name='ajouter_produit'),
     path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
     path('edit/<int:product_id>/', views.edit_product, name='edit_product'),
-
+path('about/', views.about, name='about'),
     # ... autres URLs ...
-    
-    
-    
+      path('add/<int:produit_id>/', views.add_to_cart, name='add_to_cart'),
+    path('cart/', views.cart_view, name='cart_view'),
+    path('cart/checkout/', views.checkout, name='cart_checkout'),
+    path('cart/remove/<int:produit_id>/', views.remove_from_cart, name='remove_from_cart'),
+ 
 
 ]
 

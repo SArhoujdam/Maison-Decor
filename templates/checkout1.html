@@ -1,0 +1,37 @@
+<section class="checkout-container">
+  <h2>Checkout</h2>
+
+  {% if produits %}
+  <div class="prodact-container">
+    {% for item in produits %}
+      <div class="pro">
+        <img src="{{ item.produit.photo.url }}" alt="{{ item.produit.nom }}">
+        <div class="des">
+          <h5>{{ item.produit.nom }}</h5>
+          <p>{{ item.produit.description }}</p>
+          <h4>{{ item.produit.prix }} x {{ item.qty }} = {{ item.subtotal }} DH</h4>
+          <a href="{% url 'remove_from_cart' item.produit.id %}" class="remove-btn">🗑️ Supprimer</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h3>Total : {{ total }} DH</h3>
+  
+  <form method="post" id="checkoutForm">
+    {% csrf_token %}
+    <input type="text" name="adresse" placeholder="Adresse de livraison" required>
+    <!-- si vous voulez forcer une quantite totale : -->
+    <input type="hidden" name="quantite" value="{{ produits|length }}">
+    
+    <h3>Méthode de paiement</h3>
+    <label><input type="radio" name="payment_method" value="paypal" required> PayPal</label>
+    <label><input type="radio" name="payment_method" value="credit_card"> Carte</label>
+    <label><input type="radio" name="payment_method" value="cod"> Paiement à la livraison</label>
+
+    <button type="submit" class="shop-btn">Valider la commande</button>
+  </form>
+  {% else %}
+    <p>Votre panier est vide.</p>
+  {% endif %}
+</section>

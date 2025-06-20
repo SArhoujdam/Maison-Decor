@@ -101,38 +101,63 @@
     <aside class="bg-blue-900 text-white w-64 p-4">
         <div class="logo text-2xl font-semibold mb-8">Tableau de bord</div>
         <nav>
-            <ul class="space-y-4">
+              <ul class="space-y-4">
                 {% load static %}
                 
                 <li>
                     <a class="profile-icon-link-container" href="{% url 'profile' %}">
                         <img src="{% if profile.profile_photo %}{{ profile.profile_photo.url }}{% else %}{% static 'images/default_profile.jpg' %}{% endif %}" alt="User Image" class="w-10 h-10 rounded-full">
+                        
                     </a>
-                </li><li>
+
+                </li>
+                <li><div class="logout-container">
+                    <a href="{% url 'home' %}" class="logout-link">
+                        <i class="fas fa-sign-out-alt logout-icon"></i> Log Out
+                    </a>
+                </div><style>.logout-container {
+                    display: flex;
+                    align-items: center;
+                }
+                
+                .logout-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #e9e2e2;
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: 500;
+                    padding: 8px 12px;
+                    border-radius: 5px;
+                    transition: background-color 0.3s ease, color 0.3s ease;
+                }
+                
+                .logout-link:hover {
+                    background-color: #dc3545;
+                    color: #fff;
+                }
+                
+                .logout-icon {
+                    font-size: 16px;
+                }</style></li>
+                <li>
                     <a href="{% url 'Home' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                    <i class="fas fa-tachometer-alt mr-2"></i>    </i> Accueil
+                        <i class="fas fa-tachometer-alt mr-2"></i> Accueil
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-newspaper mr-2"></i> Articles
+                    <a href="{% url 'Categories_list2' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                        <i class="fas fa-newspaper mr-2"></i> Categories
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-photo-video mr-2"></i> Médias
-                    </a>
-                </li>
+               
                 <li>
                     <a href="{% url 'navigation_dashboard' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
                         <i class="fas fa-file-alt mr-2"></i> Pages
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-comments mr-2"></i> Commentaires
-                    </a>
-                </li>
+                
                 <li>
                     <a href="{% url 'liste_utilisateurs' %}" id="afficherUtilisateurs" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
                         <i class="fas fa-users mr-2"></i> Utilisateurs
@@ -140,43 +165,20 @@
                 </li>
                 </script>
                 <li>
-                    <a href="{% url 'categories:categories_list' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                    <a href="{% url 'produit_list1' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
                         <i class="fas fa-tags mr-2"></i> produits
                     </a>
                 </li>
+              
+               
+              
+                
                 <li>
                     <a href="{% url 'appearance' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-sliders-h mr-2"></i> Apparence
-
-                        
+                        <i class="fas fa-tools mr-2"></i> appearance
                     </a>
                 </li>
-                <li>
-                    <a href="#" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-puzzle-piece mr-2"></i> Extensions
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-phone mr-2"></i> Call Now Button
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-chart-pie mr-2"></i> Comptes
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'liste_produits' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-tools mr-2"></i> Outils liste_produits
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-cog mr-2"></i> Réglages
-                    </a>
-                </li>
-            </ul>
+              </ul>
         </nav>
     </aside>
 
@@ -214,36 +216,38 @@
                         {% endfor %}
                     </ul>
                     <h3 class="text-lg font-semibold mt-4 text-indigo-600">Détails des commandes :</h3>
-                    <div class="order-table"><table>
+                    <table class="order-table">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>l'utilisateur</th>
-                                <th>l'adresse</th>
-                                <th>la quantité</th>
-                                <th>la date</th>
-                                <th>les produits</th>
+                                
+                                <th>Utilisateur</th>
+                                <th>Adresse</th>
+                                <th>Quantité</th>
+                                <th>Date</th>
+                                <th>Produits</th>
+                                <th>Payment </th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for cmd in commandes %}
                             <tr>
-                                <td>{{ forloop.counter }}</td>
+                                
                                 <td>{{ cmd.user.username }}</td>
                                 <td>{{ cmd.adresse_livraison }}</td>
                                 <td>{{ cmd.quantite }}</td>
-                                <td>{{ cmd.date_commande|date:"Y/m/d " }}</td>
+                                <td>{{ cmd.date_commande|date:"Y/m/d" }}</td>
                                 <td>
                                     {% for p in cmd.produits.all %}
-                                        {{ p.nom }}{% if not forloop.last %}، {% endif %}
+                                        {{ p.nom }}{% if not forloop.last %}, {% endif %}
                                     {% empty %}
                                         -
                                     {% endfor %}
                                 </td>
+                                <td>{{ cmd.Methode_paiement }}</td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" style="text-align:center">Aucune commande disponible</td>  </td>
+                                <td colspan="7" style="text-align:center">Aucune commande trouvée</td>
                             </tr>
                             {% endfor %}
                         </tbody>

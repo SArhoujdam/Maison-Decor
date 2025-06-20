@@ -4,23 +4,22 @@ document.getElementById("mobile").addEventListener("click", function() {
     navbar.classList.toggle("active");
 });
 
-// JavaScript لإغلاق القائمة عند النقر على أيقونة الإغلاق
 document.getElementById("Close").addEventListener("click", function() {
     const navbar = document.getElementById("navbar");
     navbar.classList.remove("active");
 });
 
 let currentSlide = 0;
-const slides = document.querySelectorAll("#img-slider .slideactive"); // يختار جميع الشرائح
+const slides = document.querySelectorAll("#img-slider .slideactive"); 
 
 function showSlide(index) {
     slides.forEach((slide, i) => {
-        slide.style.display = i === index ? "block" : "none"; // يعرض الشريحة الحالية فقط
+        slide.style.display = i === index ? "block" : "none"; 
     });
 }
 
 function nextSlide() {
-    currentSlide = (currentSlide + 1) % slides.length; // ينتقل للشريحة التالية ويعود للبداية إذا انتهى
+    currentSlide = (currentSlide + 1) % slides.length; 
     showSlide(currentSlide);
 }
 

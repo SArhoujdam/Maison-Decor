@@ -11,6 +11,31 @@ bar.addEventListener('click', function () {
         })
     }
 });
+document.addEventListener('DOMContentLoaded', function () {
+    const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+    const textColor = localStorage.getItem('textColor') || '#000000';
+    const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+    const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+    const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+    // Appliquer les styles sur le body
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+
+    // Appliquer les styles sur le navbar
+    const navbar = document.querySelector('header, nav, #header');
+    const navLinks = document.querySelectorAll('nav a');
+
+    if (navbar) {
+        navbar.style.backgroundColor = navbarBgColor;
+    }
+
+    navLinks.forEach(link => {
+        link.style.color = navbarLinkColor;
+    });
+});
+
 const choix = document.getElementById('choix').addEventListener('change', function() {
     var selectedOption = this.value;
     // Exemple d'action basée sur l'option sélectionnée

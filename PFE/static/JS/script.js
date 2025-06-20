@@ -16,24 +16,7 @@ function afficherImageGrande() {
     modal.style.display = "block";
     imgGrande.src = img.src;
 }
-function afficherPagelarge_choix() {
-    window.location.href = ("/subpages (1)/categories.html"); 
-}
-function afficherPagequalité() {
-    window.location.href = ("/subpages (1)/contact.html");
-}
-function afficherPageinformations() {
-    window.location.href = ("/subpages (1)/about.html"); 
-}
-function afficherPageConseils() {
-    window.location.href = ("/subpages (1)/Conseils.html"); 
-}
-function afficherPagePromotions() {
-    window.location.href = ("/subpages (1)/promo.html"); 
-}
-function afficherPageService() {
-    window.location.href = ("/subpages (1)/service.html"); 
-}
+
 //page categoriesafficherPagePromotions
 
 //////////////////////////////////

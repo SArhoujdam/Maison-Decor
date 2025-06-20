@@ -29,7 +29,7 @@ def home_view(request):
         products = Produit.objects.filter(homes__isnull=False).distinct()
 
     categories = Categorie.objects.all()
-    paginator = Paginator(products, 6)
+    paginator = Paginator(products, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 

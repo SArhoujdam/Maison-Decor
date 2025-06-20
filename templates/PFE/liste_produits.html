@@ -141,6 +141,7 @@
 <div id="add-popup" class="popup">
     <div class="popup-content">
         <span class="close-popup" onclick="closePopup('add-popup')">&times;</span>
+        <br>
         <h2>Ajouter un produit</h2>
         <form action="{% url 'ajouter_produit' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -167,8 +168,10 @@
 
             <label for="photo">Photo</label>
             <input type="file" name="photo" id="photo" required><br><br>
-
+            
+             
             <button type="submit">Ajouter</button>
+            <button type="button" onclick="closePopup('add-popup')">Annuler</button>
         </form>
     </div>
 </div>
@@ -176,6 +179,7 @@
 <table>
     <thead>
         <tr>
+            <th>user</th>
             <th>Image</th>
             <th>Nom</th>
             <th>Catégorie</th>
@@ -190,6 +194,7 @@
     <tbody>
         {% for produit in produits %}
         <tr>
+            <td>{{ produit.user.username }}</td>
             <td><img src="{{ produit.photo.url }}" alt="{{ produit.nom }}" style="width: 80px; height: auto;"></td>
             <td>{{ produit.nom }}</td>
             <td>{{ produit.categorie.nom }}</td>
@@ -228,6 +233,68 @@
         {% endfor %}
     </tbody>
 </table>
+<div class="custom-pagination">
+    {% if produits.has_previous %}
+        <a href="?page={{ produits.previous_page_number }}" class="prev">&laquo; Précédent</a>
+    {% else %}
+        <span class="disabled prev">&laquo; Précédent</span>
+    {% endif %}
+
+    {% for num in produits.paginator.page_range %}
+        {% if produits.number == num %}
+            <span class="current">{{ num }}</span>
+        {% elif num >= produits.number|add:'-2' and num <= produits.number|add:'2' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if produits.has_next %}
+        <a href="?page={{ produits.next_page_number }}" class="next">Suivant &raquo;</a>
+    {% else %}
+        <span class="disabled next">Suivant &raquo;</span>
+    {% endif %}
+</div>
+<style>
+.custom-pagination {
+    text-align: center;
+    margin-top: 30px;
+    font-family: Arial, sans-serif;
+}
+
+.custom-pagination a,
+.custom-pagination span {
+    display: inline-block;
+    margin: 0 6px;
+    padding: 8px 14px;
+    text-decoration: none;
+    border-radius: 4px;
+    color: #333;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.custom-pagination a:hover {
+    background-color: #f0f0f0;
+}
+
+.custom-pagination .current {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #3498db;
+}
+
+.custom-pagination .disabled {
+    color: #ccc;
+    border: 1px solid #eee;
+    cursor: not-allowed;
+}
+
+.custom-pagination .prev,
+.custom-pagination .next {
+    font-weight: bold;
+}
+</style>
 
 <!-- POPUPS -->
 {% for produit in produits %}
@@ -250,6 +317,7 @@
             <input type="number" name="quantite" value="{{ produit.quantite }}" required><br><br>
             <input type="file" name="photo"><br><br>
             <button type="submit">Enregistrer</button>
+            <button type="button" onclick="closePopup('edit-popup-{{ produit.id }}')">Annuler</button>
         </form>
     </div>
 </div>
@@ -336,6 +404,32 @@ document.body.style.fontFamily = fontFamily;
 
 
 document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+        const textColor = localStorage.getItem('textColor') || '#000000';
+        const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+        const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+        const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+        // Appliquer les styles sur le body
+        document.body.style.backgroundColor = backgroundColor;
+        document.body.style.color = textColor;
+        document.body.style.fontFamily = fontFamily;
+
+        // Appliquer les styles sur le navbar
+        const navbar = document.querySelector('header, nav, #header');
+        const navLinks = document.querySelectorAll('nav a');
+
+        if (navbar) {
+            navbar.style.backgroundColor = navbarBgColor;
+        }
+
+        navLinks.forEach(link => {
+            link.style.color = navbarLinkColor;
+        });
+    });
 </script>
 
 </body>

@@ -134,6 +134,7 @@
                     <input type="file" name="photo" accept="image/*"><br><br>
 
                     <button type="submit">Modifier</button>
+                    <button type="button" onclick="hideModal('modifierCategorieModal{{ category.id }}')">Annuler</button>
                 </form>
             </div>
         </div>
@@ -156,6 +157,7 @@
             <input type="file" name="photo" accept="image/*" required><br><br>
 
             <button type="submit">Ajouter</button>
+            <button type="button" onclick="hideModal('ajouterCategorieModal')">Annuler</button>
         </form>
     </div>
 </div>
@@ -204,4 +206,30 @@ window.onclick = function(event) {
     cursor: pointer;
 }
 </style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+        const textColor = localStorage.getItem('textColor') || '#000000';
+        const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+        const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+        const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+        // Appliquer les styles sur le body
+        document.body.style.backgroundColor = backgroundColor;
+        document.body.style.color = textColor;
+        document.body.style.fontFamily = fontFamily;
+
+        // Appliquer les styles sur le navbar
+        const navbar = document.querySelector('header, nav, #header');
+        const navLinks = document.querySelectorAll('nav a');
+
+        if (navbar) {
+            navbar.style.backgroundColor = navbarBgColor;
+        }
+
+        navLinks.forEach(link => {
+            link.style.color = navbarLinkColor;
+        });
+    });
+</script>
 

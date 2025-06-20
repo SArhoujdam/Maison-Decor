@@ -1,0 +1,85 @@
+{% load static %}
+{% include 'header.html' %}
+    <header>
+        <h1>À propos de Maison Décor</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Notre Histoire</h2>
+            <p>Fondée avec une passion pour l'artisanat en bois, Maison Décor s'engage à offrir des produits uniques qui allient tradition et modernité.</p>
+        </section>
+        <section>
+            <h2>Notre Mission</h2>
+            <p>Nous visons à fournir des articles de décoration en bois de haute qualité, apportant une touche chaleureuse et authentique à votre intérieur.</p>
+        </section>
+        <section>
+            <h2>Nos Valeurs</h2>
+            <ul>
+                <li><strong>Qualité :</strong> Sélection rigoureuse des matériaux pour des produits durables.</li>
+                <li><strong>Artisanat :</strong> Collaboration avec des artisans talentueux pour préserver le savoir-faire traditionnel.</li>
+                <li><strong>Durabilité :</strong> Engagement envers des pratiques respectueuses de l'environnement.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Notre Équipe</h2>
+            <p>Une équipe dédiée de designers, artisans et passionnés par le bois, travaillant ensemble pour créer des pièces uniques.</p>
+        </section>
+        <section>
+            <h2>Contactez-nous</h2>
+            <p>Pour toute question ou information supplémentaire, n'hésitez pas à nous contacter à l'adresse suivante : <a href="mailto:contact@maisondecor.com">contact@maisondecor.com</a></p>
+        </section>
+    </main>
+    
+    <style>
+    body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+header {
+    background: #8B4513;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+main {
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    color: #5A2D0C;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    background: url('checkmark.png') no-repeat left center;
+    background-size: 20px;
+    padding-left: 30px;
+    margin-bottom: 10px;
+}
+
+a {
+    color: #8B4513;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+</style>
+{% include 'footer.html' %}

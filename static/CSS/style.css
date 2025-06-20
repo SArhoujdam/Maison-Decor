@@ -220,8 +220,21 @@ a {
     border: none;
     border-radius: 5px;
 }
+@media only screen and (max-width: 440px) and (max-height: 956px) {
+#sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+
+}
+
+    }
 
 @media only screen and (max-width: 1200px) and (max-height: 800px) {
+#sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+
+}
     .container {
         display: block;
     }
@@ -241,6 +254,11 @@ a {
 
 
   @media only screen and (max-width: 700px) {
+    #sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+
+}
     .user-content-container {
         margin: 2em auto;
     }
@@ -264,6 +282,12 @@ a {
   }
 
   @media only screen and (min-width: 1200px){
+    #sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+ 
+ 
+}
     .user-content-container {
         width: 60%;
     }
@@ -388,6 +412,11 @@ a {
 
 
 @media only screen and (max-width: 1200px) {
+    #sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+
+}
     .container {
         display: block;
         margin-left: .1em;
@@ -412,6 +441,11 @@ a {
 
 
   @media only screen and (max-width: 600px) {
+    #sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+
+}
     .user-profile-form-container {
         margin: 2em auto;
     }
@@ -602,6 +636,9 @@ button[type="submit"] {
 
 
 @media only screen and (max-width: 1200px) {
+   
+
+}
     .container {
         margin: 0 auto;
         width: 90%;
@@ -618,10 +655,15 @@ button[type="submit"] {
         padding: 2em 0em;
 
     }
-  }
+  
 
 
   @media only screen and (max-width: 600px) {
+    #sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+
+}
     .user-profile-form-container {
         margin: 2em auto;
     }
@@ -741,6 +783,11 @@ button[type="submit"] {
 
 /* على الشاشات الكبيرة */
 @media (min-width: 768px) {
+    #sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+
+}
     .fe-box img {
         max-width: 95px;
     }
@@ -748,6 +795,11 @@ button[type="submit"] {
 
 /* على الشاشات الصغيرة */
 @media (max-width: 767px) {
+    #sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+
+}
     .fe-box img {
         max-width: 80px;
     }
@@ -763,6 +815,11 @@ button[type="submit"] {
 
 /* على الشاشات الكبيرة */
 @media (min-width: 768px) {
+    #sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+
+}
     #sectionidfeatur {
         justify-content: flex-start;
     }
@@ -770,6 +827,11 @@ button[type="submit"] {
 
 /* على الشاشات الصغيرة */
 @media (max-width: 767px) {
+    #sectionidfeatur .fe-box img {
+  width: 70px;
+  height: 70px; 
+  
+}
     #sectionidfeatur {
         justify-content: center;
     }

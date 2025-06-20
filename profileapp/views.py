@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
 from .utils import send_verification_email
+from django.urls import reverse
+from django.conf import settings
  # Correction de l'import
 from .models import Profileapp
 
@@ -119,6 +121,7 @@ def verify_email(request, uidb64, token):
 
 # Connexion
 
+
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -128,9 +131,16 @@ def login_view(request):
         if user is not None:
             auth_login(request, user)
 
+            # ✅ نأخذ قيمة next من POST وليس من GET
+            next_url = request.POST.get('next')
+
+            if next_url:
+                return redirect(next_url)
+
             redirect_url = request.session.pop('redirect_after_login', None)
             if redirect_url:
                 return redirect(redirect_url)
+
             elif user.is_staff:
                 return redirect('commandes_list')
             else:
@@ -140,6 +150,7 @@ def login_view(request):
             return redirect('login')
 
     return render(request, 'profileapp/login_page.html')
+
 
 
 

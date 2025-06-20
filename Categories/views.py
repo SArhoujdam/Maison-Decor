@@ -10,7 +10,7 @@ from django.utils.text import slugify
 def is_admin(user):
     return user.is_superuser
 
-def liste_categories(request): 
+def liste_categories(request, slug): 
     if request.user.is_authenticated:
         categories = Categorie.objects.all()
         try:

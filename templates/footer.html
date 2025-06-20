@@ -31,19 +31,15 @@
 
   <div class="col">
       <h4>About</h4>
-      <a href="./subpages/about.html">About Us</a>
-      <a href="./subpages/blog.html">Delivery Information</a>
-      <a href="./subpages/privacy.html">Privacy Policy</a>
-      <a href="./subpages/terms.html">Terms & Conditions</a>
+      <a href="{% url 'about' %}">About Us</a>
+      
       <a href="{% url 'contact1' %}">Contact Us</a>
   </div>
 
   <div class="col">
       <h4>My Account</h4>
       <a href="{% url 'login' %}">Sign In</a>
-      <a href="./subpages/cart.html">View Cart</a>
-      <a href="./subpages/wishlist.html">My Wishlist</a>
-      <a href="./subpages/track-order.html">Track My Order</a>
+     
       <a href="{% url 'contact1' %}">Help</a>
   </div>
 

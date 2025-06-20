@@ -29,7 +29,7 @@ const choix = document.getElementById('choix').addEventListener('change', functi
             break;
         default:
             alert('Option invalide');
-    }
-        });
+ }
+});
 
 

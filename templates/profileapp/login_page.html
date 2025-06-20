@@ -35,21 +35,25 @@
     <div class="container">
         <h1 class="signup-heading">Log in</h1>
         <div class="user-content-container user-profile-form-container">
-            <form action="{% url 'login' %}" method="POST">
-                {% csrf_token %}
-                <ul>
-                    <li class="name">
-                        <label for="username">Username</label>
-                        <input type="text" name="username" id="username" class="username-input" placeholder="Username">
-                    </li>
-                    <li class="pass">
-                        <label for="password">Password</label>
-                        <input type="password" name="password" id="password" class="pass-input" placeholder="Password">
-                    </li>
-                    <button class="signup-button" type="submit"> Log in </button>
-                    <p class="login-link">Don't have an account? <a href="{% url 'register' %}">Sign Up</a></p>
-                </ul>
-            </form>
+           <form action="{% url 'login' %}" method="POST">
+    {% csrf_token %}
+    <ul>
+        <li class="name">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" class="username-input" placeholder="Username">
+        </li>
+        <li class="pass">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" class="pass-input" placeholder="Password">
+        </li>
+
+        <!-- ✅ هذا السطر يضمن الرجوع للصفحة الأصلية -->
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+        <button class="signup-button" type="submit"> Log in </button>
+        <p class="login-link">Don't have an account? <a href="{% url 'register' %}">Sign Up</a></p>
+    </ul>
+</form>
         </div>
     </div>
 </main>

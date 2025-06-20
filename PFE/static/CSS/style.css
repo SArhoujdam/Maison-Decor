@@ -1066,61 +1066,6 @@ right: 15px;
 
 /*footer*/
 
-footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 10px 2px;
-}
-
-footer .logo2 {
-    border-radius: 50px;
-    margin-bottom: 30px;
-}
-
-footer h4 {
-    font-size: 15px;
-    margin-bottom: 20px;
-}
-
-footer p {
-    font-size: 13px;
-    margin-bottom: 8px;
-}
-
-footer a {
-    display: flex;
-    font-size: 13px;
-    text-decoration: none;
-    color: #2b2a29;
-}
-
-footer .follow {
-    margin-top: 20px;
-}
-
-footer .icon {
-    display: flex;
-    justify-content: space-between;
-    color: #1ba8e0;
-}
-
-footer .icon :hover {
-    color: #05f110;
-}
-
-footer .copyright {
-    width: 100%;
-    text-align: center;
-    margin: 20px;
-}
-
-footer .copyright img {
-    border-radius: 50px;
-}
-
-
 /* les pages suivantes
 */
 

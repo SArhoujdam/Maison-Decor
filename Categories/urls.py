@@ -11,7 +11,7 @@ urlpatterns = [
     path('edit/<int:pk>/', views.modifier_categorie, name='category_edit'),
     path('delete/<int:pk>/', views.supprimer_categorie, name='supprimer_categorie'),
     path('categorie/<slug:slug>/produits/', views.produits_par_categorie, name='produits_par_categorie'),
-   
+    path('categorie/<slug:slug>/', views.produits_par_categorie, name='single_categorie'),
     path('produit/supprimer/<int:produit_id>/', views.supprimer_produit, name='supprimer_produit'),
      path('produit/<slug:slug>/', views.produit_detail_view, name='produit_detail'),
 

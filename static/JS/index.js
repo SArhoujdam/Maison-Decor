@@ -78,6 +78,30 @@ function supprimerProduit(produitId) {
     })
     .catch(error => Swal.fire("Erreur!", "Une erreur est survenue.", "error"));
 }
+document.addEventListener('DOMContentLoaded', function () {
+    const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+    const textColor = localStorage.getItem('textColor') || '#000000';
+    const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+    const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+    const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+    // Appliquer les styles sur le body
+    document.body.style.backgroundColor = backgroundColor;
+    document.body.style.color = textColor;
+    document.body.style.fontFamily = fontFamily;
+
+    // Appliquer les styles sur le navbar
+    const navbar = document.querySelector('header, nav, #header');
+    const navLinks = document.querySelectorAll('nav a');
+
+    if (navbar) {
+        navbar.style.backgroundColor = navbarBgColor;
+    }
+
+    navLinks.forEach(link => {
+        link.style.color = navbarLinkColor;
+    });
+});
 
 function modifierProduit(produitId) {
     var csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
@@ -147,3 +171,4 @@ function modifierProduit(produitId) {
 function fermerModalHome() {
     document.getElementById('popupHome').style.display = 'none';
 }
+///////home page/////

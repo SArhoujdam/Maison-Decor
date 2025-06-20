@@ -66,7 +66,7 @@
         </li>
         <li><div class="search-bar">
           <form method="get" action="{% url 'recherche' %}" class="search-form">
-            <i class="fa fa-search search-icon-right"></i>
+            <i class="fa fa-search search-icon-right" style=border-radius:50%></i>
             <input type="text" name="recherche" value="{{ recherche }}" placeholder="Chercher un produit" class="search-input">
             <button type="submit" class="search-icon-right">
               <i class="fa fa-search"></i>
@@ -108,6 +108,7 @@
         }
         
         .search-input:focus {
+           border-radius: 50%;
           border-color: #4285f4;
         }
         
@@ -144,9 +145,9 @@
           </a>
       {% endif %}</li>
       
-        <li class="lg-bag">
-
-          <a href="#" id="Close"><i class="fa-solid fa-xmark"></i></a>
+      
+        <li><a href="{% url 'cart_view' %}"><i class="fa-solid fa-bag-shopping"></i>
+</a></li>
       </ul>
     </nav>
 

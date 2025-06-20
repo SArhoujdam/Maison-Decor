@@ -1,8 +1,13 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+ # إذا كنت تستعمل profile photo
+from django.db import transaction
 from decimal import Decimal
 from email.headerregistry import Address
 import json
 import profile
-from pyexpat.errors import messages
 import qrcode
 from io import BytesIO
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
@@ -20,10 +25,8 @@ from PFE.models import Commande as PFECommande
 from Home.models import Home 
 from django.db.models import Sum, Prefetch
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
-from django.shortcuts import redirect
-from django.contrib.auth.models import User
 
+from django.contrib.auth.models import User
 
 
 from promo.models import promo 
@@ -33,33 +36,32 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
-
 def is_admin(user):
     return user.is_staff or user.is_superuser
 @login_required
 @user_passes_test(is_admin)
 def produit_list(request):
     profile = Profileapp.objects.get(user=request.user)
-   
+    # Récupérer tous les produits
     produits = Produit.objects.all()
     categories = Categorie.objects.all()
-   
+    # Récupérer uniquement les produits dans "Home"
     home_products = Produit.objects.filter(homes__isnull=False).distinct()
     promo_products = Produit.objects.filter(promos__isnull=False).distinct()
     
 
 
-    
-    paginator = Paginator(produits, 9) 
-    page_number = request.GET.get('page')
-    produits_page = paginator.get_page(page_number)  
+    # Pagination: Afficher 9 produits par page
+    paginator = Paginator(produits, 9)  # 9 produits par page
+    page_number = request.GET.get('page')  # Récupérer la page actuelle depuis l'URL
+    produits_page = paginator.get_page(page_number)  # Obtenir la page actuelle des produits
 
     return render(request, 'PFE/liste_produits.html', {
-        'produits': produits_page,  
+        'produits': produits_page,  # Produits paginés
         'home_products': home_products, 
          'promo_products': promo_products,
            'categories': categories,
-             'profile':profile, 
+             'profile':profile,  # Produits présents dans "Home"
     })
 
 @login_required
@@ -133,7 +135,7 @@ def checkout(request):
             return HttpResponseBadRequest("Produit non trouvé.")
         produit = produits.first()
         if produit.quantite < quantite:
-            return HttpResponseBadRequest("Quantité demandée non disponible en stock.")
+            return redirect(request,'checkout.html')
         payment_method = request.POST.get('payment_method')
         if payment_method not in ['credit_card', 'paypal', 'cod']:
             return HttpResponseBadRequest("Méthode de paiement non valide.")
@@ -155,17 +157,16 @@ def checkout(request):
         'profile': profile,}
     return render(request, 'checkout.html', context)
 @login_required
-@login_required
 
 
 def order_confirmation(request, commande_id):
     profile = Profileapp.objects.get(user=request.user)
     commande = get_object_or_404(Commande, id=commande_id, user=request.user)
 
-   
+    # Récupérer toutes les lignes de commande liées à cette commande
     lignes_commande = LigneCommande.objects.filter(commande=commande)
 
-   
+    # S'il n'y a qu'un seul produit par commande (comme supposé), on prend le premier
     produit = lignes_commande.first().produit if lignes_commande.exists() else None
 
     context = {
@@ -176,7 +177,7 @@ def order_confirmation(request, commande_id):
         'download_pdf_url': f"/download-ticket/{commande.id}/",
     }
     return render(request, 'order_confirmation.html', context)
-@login_required
+
 @login_required
 def generate_order_pdf(commande, lignes_commande):
     buffer = BytesIO()
@@ -202,10 +203,10 @@ def generate_order_pdf(commande, lignes_commande):
     p.setFont("Helvetica", 11)
 
     for ligne in lignes_commande:
-        p.drawString(100, y, f"- {ligne.produit.nom} : {ligne.quantite} x {ligne.prix_unitaire} DHs")
+        p.drawString(100, y, f"- {ligne.produit.nom} : {ligne.quantite} x {ligne.prix_unitaire} DA")
         y -= 20
 
-    p.drawString(100, y, f"Total : {commande.prix_total} Dhs")
+    p.drawString(100, y, f"Total : {commande.prix_total} DA")
 
     # QR Code
     qr_code_data = f"/download-ticket/{commande.id}/"
@@ -219,14 +220,6 @@ def generate_order_pdf(commande, lignes_commande):
     p.save()
     buffer.seek(0)
     return buffer
-def update_quantity(request, produit_id):
-    if request.method == 'POST':
-        qty = int(request.POST.get('qty', 1))
-        panier = request.session.get('cart', {})
-        if str(produit_id) in panier:
-            panier[str(produit_id)] = {'qty': qty}
-            request.session['cart'] = panier
-    return redirect('cart')
 
 @login_required
 
@@ -234,12 +227,15 @@ def update_quantity(request, produit_id):
 def download_ticket(request, commande_id):
     commande = get_object_or_404(Commande, id=commande_id, user=request.user)
 
-    
+    # Récupérer toutes les lignes de commande associées à cette commande
     lignes_commande = LigneCommande.objects.filter(commande=commande)
 
     if not lignes_commande.exists():
         return HttpResponseBadRequest("Aucun produit trouvé pour cette commande.")
+
+    # Générer le PDF avec toutes les lignes
     pdf_buffer = generate_order_pdf(commande, lignes_commande)
+
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="billet_achat_{commande.id}.pdf"'
     response.write(pdf_buffer.getvalue())
@@ -323,8 +319,6 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 @staff_member_required
-@login_required
-@staff_member_required
 
 def liste_commandes(request):
     utilisateurs = User.objects.all()
@@ -393,8 +387,6 @@ def liste_commandes(request):
         'commandes': commandes,
         'total': commandes.count()
     })
-
-
 
 
 
@@ -498,8 +490,7 @@ def ajouter_produit(request):
                 prix=prix,
                 description=description,
                 quantite=quantite,
-                photo=photo,
-                user=request.user  # Assurez-vous que l'utilisateur est lié au produit
+                photo=photo
             )
 
             return redirect('produit_list1')  
@@ -528,7 +519,7 @@ def delete_product(request, product_id):
 @user_passes_test(is_admin)
 def edit_product(request, product_id):
     produit = get_object_or_404(Produit, id=product_id)
-    profile = Profileapp.objects.get(user=request.user)
+
     if request.method == 'POST':
         categorie_id = request.POST.get('categorie')
         if not categorie_id:
@@ -544,7 +535,6 @@ def edit_product(request, product_id):
         produit.description = request.POST.get('description')
         produit.quantite = request.POST.get('quantite')
         produit.categorie = categorie
-        user = request.user  # Assurez-vous que l'utilisateur est lié au produit
 
         if 'photo' in request.FILES:
             produit.photo = request.FILES['photo']
@@ -557,8 +547,7 @@ def edit_product(request, product_id):
         categories = Categorie.objects.all()
         return render(request, 'PFE/edit_product.html', {
             'produit': produit,
-            'categories': categories,
-            'profile': profile,
+            'categories': categories
         })
 
 
@@ -714,32 +703,99 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
   # adapte selon ton app
+
 def add_to_cart(request, produit_id):
+    profile = Profileapp.objects.get(user=request.user)
     produit = get_object_or_404(Produit, id=produit_id)
 
-    # Vérifie s’il y a une promo liée
-    has_promo = promo.objects.filter(produit=produit).exists()
-
-    if produit.quantite <= 0 and has_promo:
+    # Vérifie la quantité disponible
+    if produit.quantite <= 0:
+        # Si c'est une requête AJAX, on renvoie un message d'erreur JSON
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return JsonResponse({'status': 'error', 'message': 'Produit en promo non disponible ❌'})
-        else:
-            messages.error(request, "Ce produit en promotion est en rupture de stock.")
-            return redirect('cart_view')
+            return JsonResponse({'status': 'error', 'message': 'Produit non disponible'})
+        # Sinon, redirige avec un message d'erreur dans le contexte (si tu gères les messages)
+        return redirect('cart_view')  # ou une autre vue avec un message
 
-    # Continue normalement si disponible
-    cart = request.session.get('cart', {})
-    produit_id_str = str(produit.id)
-    cart[produit_id_str] = cart.get(produit_id_str, 0) + 1
-    request.session['cart'] = cart
+    # Ajout au panier
+    panier = request.session.get('cart', {})
+    panier_str = str(produit_id)
+    panier[panier_str] = panier.get(panier_str, 0) + 1
+    request.session['cart'] = panier
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'status': 'success', 'message': 'Produit ajouté avec succès ✅'})
-    else:
-        return redirect('cart_view')
- # nommez cette URL selon votre config
-@login_required
+        return JsonResponse({'status': 'success', 'message': 'Produit ajouté au panier'})
 
+    return redirect('cart_view')
+
+
+@login_required
+@transaction.atomic
+
+
+def cart_view(request):
+    cart = request.session.get('cart', {})  # Ex: { '1': {'qty': 2}, '3': {'qty': 1} }
+
+    produits = []
+    total = 0
+
+    for produit_id, item in cart.items():
+        produit = get_object_or_404(Produit, id=produit_id)
+        quantite = item['qty']
+
+        if quantite == 0:
+            messages.error(request, f"La quantité du produit « {produit.nom} » est vide.")
+            return redirect('cart_view')  # Redirige vers le panier sans passer la commande
+
+        total_item = quantite * produit.prix
+        total += total_item
+        produits.append({
+            'produit': produit,
+            'qty': quantite,
+            'total': total_item
+        })
+
+    if request.method == 'POST':
+        adresse = request.POST.get('adresse')
+        payment_method = request.POST.get('payment_method')
+
+        if not adresse or not payment_method:
+            messages.error(request, "Veuillez remplir tous les champs requis.")
+            return redirect('cart_view')
+
+        commande = Commande.objects.create(
+            user=request.user,
+            adresse_livraison=adresse,
+            prix_total=0,  # calculé après
+            Methode_paiement=payment_method
+        )
+
+        total_commande = 0
+
+        for item in produits:
+            ligne = LigneCommande.objects.create(
+                commande=commande,
+                produit=item['produit'],
+                quantite=item['qty'],
+                prix_unitaire=item['produit'].prix
+            )
+            total_commande += item['qty'] * item['produit'].prix
+
+        commande.prix_total = total_commande
+        commande.save()
+
+        # Vider le panier après commande
+        request.session['cart'] = {}
+        messages.success(request, "Votre commande a été passée avec succès.")
+        return redirect('confirmation_page')  # crée cette vue/page selon ton projet
+
+    # Récupérer profil utilisateur (photo)
+    profile = getattr(request.user, 'profile', None)
+
+    return render(request, 'cart.html', {
+        'produits': produits,
+        'profile': profile,
+        'total': total,
+    })
 
 
 
@@ -756,137 +812,61 @@ def remove_from_cart(request, produit_id):
 
 # assurez-vous d'avoir le middleware de sessions activé (par défaut) :contentReference[oaicite:3]{index=3}
 
-@login_required(login_url='login')
-def cart_view(request):
-    profile = Profileapp.objects.get(user=request.user)
-    
-    if 'cart' not in request.session:
-        request.session['cart'] = {}
+  # si nécessaire
 
-    panier = request.session['cart']
-    produits = []
-    total = Decimal('0')
 
-    for pid, data in panier.items():
-        produit = get_object_or_404(Produit, id=int(pid))
-
-        # Récupérer la quantité
-        qty = int(data.get('qty')) if isinstance(data, dict) else int(data)
-
-        # Limiter au stock disponible
-        if produit.quantite < qty:
-            qty = produit.quantite
-
-        subtotal = produit.prix * qty
-        total += subtotal
-
-        produits.append({
-            'produit': produit,
-            'qty': qty,
-            'subtotal': subtotal,
-        })
-
-    # Si formulaire soumis
-    if request.method == 'POST':
-        adresse = request.POST.get('adresse')
-        methode_paiement = request.POST.get('payment_method')
-
-        if not adresse or not methode_paiement:
-            messages.error(request, "Veuillez remplir tous les champs requis.")
-            return redirect('cart')
-
-        commande = Commande.objects.create(
-            user=request.user,
-            adresse_livraison=adresse,
-            Methode_paiement=methode_paiement,
-            prix_total=0  # Temporaire
-        )
-
-        prix_total_commande = Decimal('0')
-
-        for item in produits:
-            produit = item['produit']
-            quantite = item['qty']
-
-            LigneCommande.objects.create(
-                commande=commande,
-                produit=produit,
-                quantite=quantite,
-                prix_unitaire=produit.prix
-            )
-
-            produit.quantite -= quantite
-            produit.save()
-
-            prix_total_commande += produit.prix * quantite
-
-        commande.prix_total = prix_total_commande
-        commande.save()
-
-        # Vider le panier
-        request.session['cart'] = {}
-        request.session.modified = True
-
-        return redirect('order_confirmation', commande_id=commande.id)
-
-    return render(request, 'cart.html', {
-        'produits': produits,
-        'total': total,
-        'profile': profile,
-    })
 
 def checkout(request):
     profile = Profileapp.objects.get(user=request.user)
+
     nom_produit = request.GET.get('nom')
-    prix_produit = request.GET.get('prix')
+    prix_produit_str = request.GET.get('prix')
     photo_url = request.GET.get('photo')
 
-    if not nom_produit or not prix_produit or not photo_url:
+    if not nom_produit or not prix_produit_str or not photo_url:
         return HttpResponseBadRequest("Les informations du produit sont manquantes.")
 
-    payment_method = None
+    try:
+        prix_produit = Decimal(prix_produit_str)
+    except:
+        return HttpResponseBadRequest("Prix du produit invalide.")
 
     if request.method == 'POST':
         adresse_livraison = request.POST.get('adresse')
         quantite = int(request.POST.get('quantite'))
-        produits = Produit.objects.filter(nom=nom_produit)
 
-        if not produits.exists():
+        produit = Produit.objects.filter(nom=nom_produit).first()
+        if not produit:
             return HttpResponseBadRequest("Produit non trouvé.")
-
-        produit = produits.first()
-
         if produit.quantite < quantite:
-            return render(request, 'checkout.html', {
-                'error': "La quantité demandée dépasse le stock disponible.",
-                'nom_produit': nom_produit,
-                'prix_produit': prix_produit,
-                'photo_url': photo_url,
-                'profile': profile,
-            })
+            return HttpResponseBadRequest("Quantité demandée non disponible en stock.")
 
         payment_method = request.POST.get('payment_method')
         if payment_method not in ['credit_card', 'paypal', 'cod']:
             return HttpResponseBadRequest("Méthode de paiement non valide.")
 
+        prix_total = prix_produit * quantite
+
+        # Création de la commande
         commande = Commande.objects.create(
             user=request.user,
             adresse_livraison=adresse_livraison,
+            quantite=quantite,
+            prix_total=prix_total,
             Methode_paiement=payment_method,
         )
 
+        # Création de la ligne de commande
         LigneCommande.objects.create(
             commande=commande,
             produit=produit,
             quantite=quantite,
-            prix_unitaire=produit.prix
+            prix_unitaire=prix_produit
         )
 
+        # Mise à jour du stock
         produit.quantite -= quantite
         produit.save()
-
-        commande.prix_total = quantite * produit.prix
-        commande.save()
 
         return redirect('order_confirmation', commande_id=commande.id)
 
@@ -894,22 +874,24 @@ def checkout(request):
         'nom_produit': nom_produit,
         'prix_produit': prix_produit,
         'photo_url': photo_url,
-        'payment_method': payment_method,
+        'prix_total': prix_produit,
         'profile': profile,
     }
-
     return render(request, 'checkout.html', context)
+
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
 @require_POST
 def add_to_cart(request, produit_id):
-    cart = request.session.get('cart', {})
-    pid = str(produit_id)
-    cart[pid] = cart.get(pid, {'qty': 0})
-    cart[pid]['qty'] += 1
-    request.session['cart'] = cart
-    request.session.modified = True
-    return JsonResponse({'status': 'success'})
+    profile = Profileapp.objects.get(user=request.user)
+    produit = get_object_or_404(Produit, id=produit_id)
+    panier = request.session.get('cart', {})
+    panier_str = str(produit_id)
+    panier[panier_str] = panier.get(panier_str, 0) + 1
+    request.session['cart'] = panier
+ 
+    return redirect('cart_view') 
+
 

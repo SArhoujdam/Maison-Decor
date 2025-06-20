@@ -1,0 +1,195 @@
+{% load static %}
+{% include 'header.html' %}
+
+<section class="checkout-container">
+  <h2>votre panier</h2>
+
+  {% if produits %}
+  <div class="prodact-container">
+    {% for item in produits %}
+    <div class="pro">
+      <div class="des">
+        <div class="product-info">
+          <img src="{{ item.produit.photo.url }}" alt="{{ item.produit.nom }}" width="100px" height="100px">
+          <div>
+            <h3>{{ item.produit.nom }}</h3>
+            <h4>{{ item.produit.prix }} DH</h4>
+          </div>
+        </div>
+
+        <form method="post" action="{% url 'update_quantity' item.produit.id %}" class="qty-form">
+          {% csrf_token %}
+          <label for="qty_{{ item.produit.id }}">Quantité:</label>
+          <input type="number" name="qty" id="qty_{{ item.produit.id }}" value="{{ item.qty }}" min="1"
+            class="qty-input" data-price="{{ item.produit.prix }}" data-item-id="{{ item.produit.id }}">
+        </form>
+
+        <a href="{% url 'remove_from_cart' item.produit.id %}" class="remove-btn">🗑 Supprimer</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <p><strong> Total:</strong> <span id="prix_total">0.00</span> DH</p>
+  <input type="hidden" id="prix_total_hidden" name="prix_total_hidden" value="">
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="order-details">
+      <h3>les Details de l'utilisateur</h3>
+      <img class="profile-image" src="{{ profile.profile_photo.url }}" alt="User Image" width="100px">
+      <style>
+        .profile-image {
+          margin: auto .3em auto auto;
+          width: 2.5em;
+          height: 2.5em;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      </style>
+      <p class="username">{{ request.user.username }}</p>
+      <p class="user-title">{{ request.user.email }}</p>
+    </div>
+
+    <div class="payment-details">
+      <h3> les Details de paiement</h3>
+      <label for="adresse">l'adresse:</label>
+      <input type="text" id="adresse" name="adresse" placeholder=" Entrez votre adresse" required>
+    </div>
+
+    <div class="payment-options">
+      <h3> Choose Payment Method </h3>
+      <label><input type="radio" name="payment_method" value="paypal" required> paypal</label><br>
+      <label><input type="radio" name="payment_method" value="credit_card">  Credit Card</label><br>
+      <label><input type="radio" name="payment_method" value="cod">   Cash on Delivery</label>
+    </div>
+
+    <div id="payment-info-container">
+      <div class="payment-info-cod" id="cod-info">
+        <h3>  information Cash on Delivery </h3>
+        <label for="cod_name">Name:</label>
+        <input type="text" id="cod_name" name="cod_name">
+        <label for="cod_phone">Number Phone:</label>
+        <input type="text" id="cod_phone" name="cod_phone">
+      </div>
+
+      <div class="payment-info-paypal" id="paypal-info">
+        <h3> information PayPal</h3>
+        <label for="paypal_email"> PayPal Email:</label>
+        <input type="email" id="paypal_email" name="paypal_email">
+      </div>
+
+      <div class="payment-info-credit_card" id="credit_card-info">
+        <h3>  information Credit Card</h3>
+        <label for="cc_number"> Number Card:</label>
+        <input type="text" id="cc_number" name="cc_number">
+        <label for="cc_expiry"> Expiry Date:</label>
+        <input type="text" id="cc_expiry" name="cc_expiry" placeholder="MM/YY">
+        <label for="cc_cvv">CVV:</label>
+        <input type="text" id="cc_cvv" name="cc_cvv">
+      </div>
+    </div>
+
+    <div class="terms-conditions">
+      <input type="checkbox" id="terms" name="terms" required>
+      <label for="terms">I agree to the terms and conditions</label>
+    </div>
+
+    <button type="submit"> Place Order</button>
+  </form>
+
+  {% else %}
+  <p> Votre panier est vide.</p>
+  {% endif %}
+</section>
+
+<style>
+  .payment-info-cod,
+  .payment-info-paypal,
+  .payment-info-credit_card {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+</style>
+
+<script>
+  // Mise à jour du prix total dynamiquement
+  document.addEventListener('DOMContentLoaded', function () {
+    function updateTotal() {
+      let total = 0;
+      document.querySelectorAll('.qty-input').forEach(input => {
+        const qty = parseInt(input.value) || 0;
+        const price = parseFloat(input.dataset.price);
+        total += qty * price;
+      });
+      document.getElementById('prix_total').textContent = total.toFixed(2);
+      document.getElementById('prix_total_hidden').value = total.toFixed(2);
+    }
+
+    document.querySelectorAll('.qty-input').forEach(input => {
+      input.addEventListener('change', function () {
+        updateTotal();
+        input.closest('form').submit();
+      });
+    });
+
+    updateTotal();
+  });
+
+  // Affichage conditionnel selon méthode الدفع
+  document.addEventListener('DOMContentLoaded', function () {
+    const radios = document.querySelectorAll('input[name="payment_method"]');
+    function togglePaymentFields() {
+      document.getElementById('cod-info').style.display = 'none';
+      document.getElementById('paypal-info').style.display = 'none';
+      document.getElementById('credit_card-info').style.display = 'none';
+
+      const method = document.querySelector('input[name="payment_method"]:checked');
+      if (method) {
+        if (method.value === 'cod') {
+          document.getElementById('cod-info').style.display = 'block';
+        } else if (method.value === 'paypal') {
+          document.getElementById('paypal-info').style.display = 'block';
+        } else if (method.value === 'credit_card') {
+          document.getElementById('credit_card-info').style.display = 'block';
+        }
+      }
+    }
+
+    radios.forEach(r => r.addEventListener('change', togglePaymentFields));
+    togglePaymentFields();
+  });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+        const textColor = localStorage.getItem('textColor') || '#000000';
+        const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+        const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+        const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+        // Appliquer les styles sur le body
+        document.body.style.backgroundColor = backgroundColor;
+        document.body.style.color = textColor;
+        document.body.style.fontFamily = fontFamily;
+
+        // Appliquer les styles sur le navbar
+        const navbar = document.querySelector('header, nav, #header');
+        const navLinks = document.querySelectorAll('nav a');
+
+        if (navbar) {
+            navbar.style.backgroundColor = navbarBgColor;
+        }
+
+        navLinks.forEach(link => {
+            link.style.color = navbarLinkColor;
+        });
+    });
+</script>
+
+
+{% include 'footer.html' %}

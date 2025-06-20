@@ -1,40 +1,8 @@
-
-
 <title>Tableau de bord</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  {% load static %}
-  <link rel="stylesheet" href="{% static 'CSS/style.css' %}" />
-  <link rel="stylesheet" href="{% static 'CSS/footer.css' %}" />
-  
-    
-    <link rel="stylesheet" href="{% static 'css1/login.css' %}">
-
-  <link rel="stylesheet" href="{% static 'CSS/styl.css' %}" />
-  <link rel="stylesheet" href="{% static 'CSS/detaille.produit.css' %}" />
-  <link rel="stylesheet" href="{% static 'CSS/respansif.css' %}" />
-  <link rel="icon" href="{% static 'images/iPhone.png' %}" />
 <script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <style>
-   
-
     /* Custom styles for the box component */
     .box {
         background-color: white;
@@ -69,7 +37,6 @@
     .messages {
         margin-bottom: 2rem;
     }
-
 
     .messages ul {
         list-style: none;
@@ -131,10 +98,11 @@
 </head>
 <body class="bg-gray-100 font-inter">
 <div class="flex h-screen">
-    <aside class="bg-blue-900 text-white w-64 p-4">
+    <nav>
+    <aside >
         <div class="logo text-2xl font-semibold mb-8">Tableau de bord</div>
-        <nav>
-            <ul class="space-y-4">
+        
+              <ul class="space-y-4">
                 {% load static %}
                 
                 <li>
@@ -202,23 +170,18 @@
                         <i class="fas fa-tags mr-2"></i> produits
                     </a>
                 </li>
-                <li>
-                    <a href="{% url 'appearance' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-sliders-h mr-2"></i> Apparence
-
-                        
-                    </a>
-                </li>
+              
                
               
                 
                 <li>
-                    <a href="{% url 'liste_produits' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
-                        <i class="fas fa-tools mr-2"></i> Outils liste_produits
-                    </a>
-                </li>
-               
-            </ul>
+            <a href="{% url 'appearance' %}" class="flex items-center text-gray-300 hover:text-white hover:bg-blue-800 p-2 rounded-md transition duration-300 hover:shadow-md">
+                <i class="fas fa-sliders-h mr-2"></i> Apparence
+
+                
+            </a>
+        </li>
+              </ul>
         </nav>
     </aside>
 
@@ -247,11 +210,6 @@
 
                 <div class="box">
                     <h2 class="text-xl font-semibold mb-4 text-green-600">Statistiques</h2>
-                    {% for utilisateur in utilisateurs %}
-                    <p class="text-gray-700"><strong class="font-semibold">Total des utilisateurs :</strong> {{ utilisateur.username }}</p>
-                    
-                    {% endfor %}
-                    <p class="text-gray-700"><strong class="font-semibold">Total des commandes :</strong> {{ total_commandes }}</p>
                     <p class="text-gray-700"><strong class="font-semibold">Total des utilisateurs :</strong> {{ total_utilisateurs }}</p>
                     <p class="text-gray-700"><strong class="font-semibold">Total des produits vendus :</strong> {{ total_produits_vendus }}</p>
                     <h3 class="text-lg font-semibold mt-4 text-purple-600">Produits les plus vendus :</h3>
@@ -261,43 +219,47 @@
                         {% endfor %}
                     </ul>
                     <h3 class="text-lg font-semibold mt-4 text-indigo-600">Détails des commandes :</h3>
-                    
-                    <table class="order-table">
-                        <thead>
-                            <tr>
-                                
-                                <th>Utilisateur</th>
-                                <th>Adresse</th>
-                                <th>Quantité</th>
-                                <th>Date</th>
-                                <th>Produits</th>
-                                <th>Payment </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for cmd in commandes %}
-                            <tr>
-                                
-                                <td>{{ cmd.user.username }}</td>
-                                <td>{{ cmd.adresse_livraison }}</td>
-                                <td>{{ cmd.quantite }}</td>
-                                <td>{{ cmd.date_commande|date:"Y/m/d" }}</td>
-                                <td>
-                                    {% for p in cmd.produits.all %}
-                                        {{ p.nom }}{% if not forloop.last %}, {% endif %}
-                                    {% empty %}
-                                        -
-                                    {% endfor %}
-                                </td>
-                                <td>{{ cmd.Methode_paiement }}</td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="7" style="text-align:center">Aucune commande trouvée</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+              <table class="order-table">
+    <thead>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Adresse</th>
+           
+            <th>Prix</th>
+            <th>Date</th>
+            <th>Produits(qty)</th>
+            <th>Payment</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cmd in commandes %}
+        <tr>
+            <td>{{ cmd.user.username }}</td>
+            <td>{{ cmd.adresse_livraison }}</td>
+            
+            <td>{{ cmd.prix_total }}DH</td>
+            <td>{{ cmd.date_commande|date:"Y/m/d" }}</td>
+            <td>
+                {% with lignes=cmd.lignecommande_set.all %}
+                    {% if lignes %}
+                        {% for ligne in lignes %}
+                            {{ ligne.produit.nom }} (x{{ ligne.quantite }}){% if not forloop.last %}|| {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        -
+                    {% endif %}
+                {% endwith %}
+            </td>
+            <td>{{ cmd.Methode_paiement }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" style="text-align:center">Aucune commande trouvée</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
                     
                 </div>
             </div>
@@ -311,97 +273,80 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Attendre que le DOM soit chargé
-    document.addEventListener('DOMContentLoaded', function() {
-        const chartElement = document.getElementById('myChart');
-        if (!chartElement) {
-            console.error("L'élément avec l'ID 'myChart' n'a pas été trouvé");
-            return;
-        }
-
-        const ctx = chartElement.getContext('2d');
-        const labels = [
-            {% for produit in produits_vendus %}
-                "{{ produit.produit.nom }}"{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        ];
-        const data = [
-            {% for produit in produits_vendus %}
-                {{ produit.total_vendu }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        ];
-       
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Produits les plus vendus',
-                    data: data,
-                    backgroundColor: ' rgba(54, 162, 235, 0.7)',
-                    borderColor: 'rgba(75, 192, 75, 0.7)',
-                    borderWidth: 5,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Nombre de ventes par produit',
-                        font: {
-                            size: 18,
-                            family: 'Arial',
-                            color: '#'
-                        }
-                    },
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: {
-                                size: 14,
-                                family: 'Arial',
-                                color: '#555'
-                            }
-                        }
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [
+                {% for produit in produits_vendus %}
+                    '{{ produit.produit.nom }}'{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Produits les plus vendus',
+                data: [
+                    {% for produit in produits_vendus %}
+                        {{ produit.total_vendu }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(75, 192, 192, 1)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Nombre de ventes par produit',
+                    font: {
+                        size: 18,
+                        family: 'Arial',
+                        color: '#85844d'
                     }
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            font: {
-                                size: 12,
-                                family: 'Arial',
-                                color: '#666'
-                            }
-                        },
-                        grid: {
-                            color: '#e0e0e0'
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            font: {
-                                size: 12,
-                                family: 'Arial',
-                                color: '#666'
-                            }
-                        },
-                        grid: {
-                            color: '#e0e0e0'
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 14,
+                            family: 'Arial',
+                            color: '#555'
                         }
                     }
                 }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 12,
+                            family: 'Arial',
+                            color: '#666'
+                        }
+                    },
+                    grid: {
+                        color: '#e0e0e0'
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 12,
+                            family: 'Arial',
+                            color: '#666'
+                        }
+                    },
+                    grid: {
+                        color: '#e0e0e0'
+                    }
+                }
             }
-        });
+        }
     });
-    
-    </script>
-    
-    
-    
+</script>
 <script>
     function applyColors() {
 
@@ -414,10 +359,41 @@
     document.body.style.color = textColor;
     document.body.style.fontFamily = fontFamily;
 
+    // const links = document.querySelectorAll('a');
+    // links.forEach(link => {
+    //     link.style.color = textColor;
+    // });
 }
 
 
 document.addEventListener('DOMContentLoaded', applyColors);
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const backgroundColor = localStorage.getItem('backgroundColor') || '#ffffff';
+        const textColor = localStorage.getItem('textColor') || '#000000';
+        const fontFamily = localStorage.getItem('fontFamily') || 'sans-serif';
+        const navbarBgColor = localStorage.getItem('navbarBgColor') || '#ffffff';
+        const navbarLinkColor = localStorage.getItem('navbarLinkColor') || '#000000';
+
+        // Appliquer les styles sur le body
+        document.body.style.backgroundColor = backgroundColor;
+        document.body.style.color = textColor;
+        document.body.style.fontFamily = fontFamily;
+
+        // Appliquer les styles sur le navbar
+        const navbar = document.querySelector('header, nav, #header');
+        const navLinks = document.querySelectorAll('nav a');
+
+        if (navbar) {
+            navbar.style.backgroundColor = navbarBgColor;
+        }
+
+        navLinks.forEach(link => {
+            link.style.color = navbarLinkColor;
+        });
+    });
+</script>
+
 </body>
 </html>
