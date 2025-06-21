@@ -21,7 +21,7 @@ def Promo_view(request):
     promos = promo.objects.select_related('produit')
 
     # Pagination : 10 éléments par page (modifiable selon vos besoins)
-    paginator = Paginator(promos, 5)
+    paginator = Paginator(promos, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
