@@ -2,3 +2,5 @@ django
 requests
 reportlab
 pillow
+sentry_sdk
+

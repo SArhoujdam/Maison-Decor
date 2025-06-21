@@ -10,7 +10,7 @@ from django.utils.text import slugify
 def is_admin(user):
     return user.is_superuser
 
-def liste_categories(request, slug): 
+def liste_categories(request): 
     if request.user.is_authenticated:
         categories = Categorie.objects.all()
         try:
@@ -22,7 +22,6 @@ def liste_categories(request, slug):
         profile = None
     
     return render(request, 'categories/Categories.html', {'categories': categories, 'profile': profile})
-
 
 @user_passes_test(lambda u: u.is_superuser)
 @login_required

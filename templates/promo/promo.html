@@ -87,7 +87,8 @@
     <h2>Nos produits associés à promo</h2>
     <h6>Collection de produits </h6>
     <div class="prodact-container">
-        {% for promo in promos %}
+        {% for promo in page_obj %}
+
         <div class="pro">
             <img src="{{ promo.produit.photo.url }}" alt="{{ promo.produit.nom }}"onclick="afficherImageGrande(this)">
             <a href="{% url 'produit_detail' promo.produit.slug %}">
